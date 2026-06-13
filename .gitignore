@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.env*.local
+terraform.tfvars
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+target/
+*.class
