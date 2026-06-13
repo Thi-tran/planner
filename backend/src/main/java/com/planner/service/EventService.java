@@ -1,10 +1,11 @@
 package com.planner.service;
 
-import com.planner.dto.EventRequest;
-import com.planner.dto.EventResponse;
-import com.planner.exception.ResourceNotFoundException;
 import com.planner.model.Event;
-import com.planner.repository.EventRepository;
+import com.planner.model.EventRepository;
+import com.planner.domain.EventRequest;
+import com.planner.domain.EventResponse;
+import com.planner.exception.ResourceNotFoundException;
+import com.planner.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,32 +20,32 @@ import java.util.UUID;
 public class EventService {
 
     private final EventRepository repository;
+    private final EventMapper mapper;
 
     public List<EventResponse> findEvents(Instant from, Instant to) {
         if (from == null) from = Instant.now().truncatedTo(ChronoUnit.DAYS);
         if (to == null)   to = from.plus(7, ChronoUnit.DAYS);
         return repository.findByStartTimeLessThanAndEndTimeGreaterThan(to, from)
                 .stream()
-                .map(EventResponse::from)
+                .map(mapper::toResponse)
                 .toList();
     }
 
     public EventResponse findById(UUID id) {
-        return EventResponse.from(getOrThrow(id));
+        return mapper.toResponse(getOrThrow(id));
     }
 
     @Transactional
     public EventResponse create(EventRequest req) {
-        Event event = new Event();
-        applyRequest(event, req);
-        return EventResponse.from(repository.save(event));
+        Event event = mapper.toEntity(req);
+        return mapper.toResponse(repository.save(event));
     }
 
     @Transactional
     public EventResponse update(UUID id, EventRequest req) {
         Event event = getOrThrow(id);
-        applyRequest(event, req);
-        return EventResponse.from(repository.save(event));
+        mapper.mapRequestToEntity(req, event);
+        return mapper.toResponse(repository.save(event));
     }
 
     @Transactional
@@ -56,13 +57,5 @@ public class EventService {
     private Event getOrThrow(UUID id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found: " + id));
-    }
-
-    private void applyRequest(Event event, EventRequest req) {
-        event.setTitle(req.getTitle());
-        event.setDescription(req.getDescription());
-        event.setStartTime(req.getStartTime());
-        event.setEndTime(req.getEndTime());
-        event.setColor(req.getColor());
     }
 }
