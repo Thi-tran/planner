@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import {
   startOfWeek,
   endOfWeek,
-  addDays,
+  startOfDay,
+  endOfDay,
   startOfMonth,
   endOfMonth,
 } from 'date-fns';
@@ -26,8 +27,11 @@ interface ModalState {
 
 function getRange(date: Date, view: CalendarView): { from: Date; to: Date } {
   switch (view) {
-    case 'day':
-      return { from: date, to: addDays(date, 1) };
+    case 'day': {
+      const from = startOfDay(date);
+      const to = endOfDay(date);
+      return { from, to };
+    }
     case 'week': {
       const from = startOfWeek(date, { weekStartsOn: 1 });
       const to = endOfWeek(date, { weekStartsOn: 1 });
