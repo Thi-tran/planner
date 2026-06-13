@@ -13,7 +13,8 @@ feature: Calendar View
 - Backend runs locally via **Docker** (app + database containers)
 - Frontend is built in **Next.js** (App Router)
 - Styling via **styled-components** (CSS-in-JS)
-- Full-stack integration: Next.js → Java API → PostgreSQL
+- Full-stack integration: Browser → **Next.js Route Handlers** (server) → Java API → PostgreSQL
+- Java backend URL is **never exposed to the browser** — all API calls are proxied through Next.js server-side Route Handlers
 - Cloud infrastructure managed with **Terraform**: **Cloud Run** (Java backend) + **Cloud SQL** (PostgreSQL) on **GCP**
 
 ---
@@ -30,10 +31,16 @@ feature: Calendar View
 planner/
 ├── frontend/                   # Next.js app
 │   ├── app/
+│   │   ├── api/
+│   │   │   └── events/
+│   │   │       ├── route.ts        # GET (list), POST (create) — server-side proxy
+│   │   │       └── [id]/
+│   │   │           └── route.ts    # GET, PUT, DELETE — server-side proxy
+│   │   ├── calendar/
+│   │   │   └── page.tsx
 │   │   ├── layout.tsx
 │   │   ├── page.tsx
-│   │   └── calendar/
-│   │       └── page.tsx
+│   │   └── registry.tsx            # styled-components SSR registry
 │   ├── components/
 │   │   └── calendar/
 │   │       ├── CalendarLayout.tsx
@@ -45,7 +52,8 @@ planner/
 │   │       ├── EventBlock.tsx
 │   │       └── EventModal.tsx
 │   ├── lib/
-│   │   ├── api.ts              # HTTP client (fetch wrapper)
+│   │   ├── api.ts              # HTTP client — calls relative /api/events paths
+│   │   ├── constants.ts        # Grid hours, color swatches
 │   │   └── types.ts            # Shared TypeScript types
 │   ├── hooks/
 │   │   └── useCalendarEvents.ts
@@ -146,6 +154,29 @@ Base URL: `http://localhost:8080/api`
 
 ---
 
+### Request Flow
+
+```
+Browser (client components)
+  └── fetch('/api/events')          # relative path, no backend URL in bundle
+        │
+        ▼
+Next.js Route Handlers             # app/api/events/route.ts  (server-side)
+  └── fetch(process.env.API_URL)    # API_URL is a server-only env var
+        │
+        ▼
+Java Spring Boot backend           # localhost:8080 (local) or Cloud Run (prod)
+        │
+        ▼
+PostgreSQL (Cloud SQL / Docker)
+```
+
+`API_URL` is never included in the browser bundle. Set it as:
+- **Local dev:** `API_URL=http://localhost:8080` in `frontend/.env.local`
+- **Vercel:** server-side environment variable (not `NEXT_PUBLIC_*`) in project settings
+
+---
+
 ### Frontend Component Architecture
 
 ```
@@ -192,17 +223,20 @@ EventModal (dialog/sheet)
   - Install additional dependencies: `styled-components@5`, `@types/styled-components`, `date-fns` (date math), `@radix-ui/react-dialog` (modal) — **pin to v5** (`npm install styled-components@5 @types/styled-components`) because the Next.js SWC compiler's `styledComponents: true` option is only compatible with v5; v6 removed support for this transform
   - Add `styledComponents: true` to `next.config.ts` compiler options to enable SSR support for styled-components
   - Create `app/registry.tsx` (styled-components `ServerStyleSheet` registry) and wrap `app/layout.tsx` with it to avoid flash of unstyled content during SSR
-  - Configure `next.config.ts` to proxy `/api/*` calls to `http://localhost:8080` in development to avoid CORS
+  - **No `rewrites()` needed** — Next.js Route Handlers (Step 2b) handle all `/api/*` routing in every environment
   - Create a root-level `.gitignore` with entries for `node_modules/`, `.next/`, `.env*.local`, `terraform.tfvars`, `terraform.tfstate`, `terraform.tfstate.backup`, `.terraform/`
   - **Note:** Every component that uses `useState`, `useEffect`, or browser event handlers (`CalendarLayout`, `CalendarHeader`, `TimeGrid`, `EventBlock`, `EventModal`, `DayView`, `WeekView`, `MonthView`) and every custom hook must include `'use client'` as the very first line — Next.js App Router defaults to Server Components
 
-#### Step 2: Define shared TypeScript types and API client
-- **What:** Create `lib/types.ts` (CalendarEvent interface) and `lib/api.ts` (typed fetch wrapper)
-- **Where:** `frontend/lib/`
+#### Step 2: Define shared TypeScript types, API client, and Route Handlers
+- **What:** Create `lib/types.ts`, `lib/constants.ts`, `lib/api.ts`, and the Next.js Route Handler files that proxy to the Java backend
+- **Where:** `frontend/lib/`, `frontend/app/api/`
 - **How:**
   - `types.ts` exports `CalendarEvent` matching the EventResponse JSON shape, plus `CalendarView = 'day' | 'week' | 'month'`
-  - Create `lib/constants.ts` exporting `GRID_START_HOUR = 7`, `GRID_END_HOUR = 22`, and the 8 preset event color swatches array
-  - `api.ts` defines `const BASE = process.env.NEXT_PUBLIC_API_URL ?? ''` and prefixes all fetch calls with it (e.g. `` fetch(`${BASE}/api/events/...`) ``); this makes the client work both in dev (empty string → Next.js proxy) and in production (Cloud Run URL via env var)
+  - `constants.ts` exports `GRID_START_HOUR = 7`, `GRID_END_HOUR = 22`, and the 8 preset event color swatches array
+  - `api.ts` uses plain relative paths (`fetch('/api/events/...')`) — **no `NEXT_PUBLIC_API_URL`**; calls are always routed through the Next.js server
+  - `app/api/events/route.ts`: `GET` (forwards `?from=&to=` params), `POST` (forwards body) — reads `process.env.API_URL` server-side
+  - `app/api/events/[id]/route.ts`: `GET`, `PUT` (forwards body), `DELETE` (returns 204) — reads `process.env.API_URL` server-side
+  - `API_URL` defaults to `http://localhost:8080`; set in `frontend/.env.local` for local dev and as a server-side env var on Vercel for production
 
 #### Step 3: Build the `useCalendarEvents` custom hook
 - **What:** React hook that fetches events for the visible date range and exposes CRUD actions
@@ -395,9 +429,8 @@ EventModal (dialog/sheet)
 - **Where:** `frontend/next.config.ts`
 - **How:**
   - Use Next.js `rewrites()` to forward `/api/:path*` to `http://localhost:8080/api/:path*`
-  - This proxy only works in the **Next.js dev server** (`npm run dev`); it does not apply to deployed builds
-  - **Production (Vercel):** Deploy the `frontend/` directory to Vercel. Set `NEXT_PUBLIC_API_URL` to the Cloud Run service URL in the Vercel project's environment variables. Set `CORS_ALLOWED_ORIGINS` in the Cloud Run service to the Vercel deployment URL (e.g. `https://planner.vercel.app`) so the backend accepts cross-origin requests from Vercel
-  - The `@CrossOrigin` annotation on the controller serves as a CORS fallback when the frontend calls the backend directly
+  - ~~This proxy only works in the **Next.js dev server** (`npm run dev`); it does not apply to deployed builds~~ **Superseded** — `rewrites()` has been removed from `next.config.ts`; Next.js Route Handlers at `app/api/events/` handle all environments uniformly
+  - **Production (Vercel):** Deploy the `frontend/` directory to Vercel. Set `API_URL` (server-side, **not** `NEXT_PUBLIC_*`) to the Cloud Run service URL in Vercel project settings. The backend URL is never sent to the browser. Set `CORS_ALLOWED_ORIGINS` in Cloud Run to the Vercel deployment URL for any direct server-to-server calls
 
 #### Step 18: Write Terraform configuration — Artifact Registry & Cloud SQL
 - **What:** Provision a Docker image registry and a managed PostgreSQL instance on GCP
