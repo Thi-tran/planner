@@ -1,0 +1,4 @@
+project_id           = "your-gcp-project-id"
+region               = "europe-west1"
+db_password          = "change-me-use-a-strong-password"
+cors_allowed_origins = "https://your-app.vercel.app"
