@@ -1,5 +1,5 @@
 ---
-status: current
+status: archived
 feature: Calendar View
 ---
 

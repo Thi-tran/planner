@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 import {
   startOfWeek,
@@ -10,8 +10,9 @@ import {
   startOfMonth,
   endOfMonth,
 } from 'date-fns';
-import type { CalendarView, CalendarEvent } from '../../lib/types';
+import type { CalendarView, CalendarEvent, Category } from '../../lib/types';
 import { useCalendarEvents } from '../../hooks/useCalendarEvents';
+import { getCategories, createCategory, updateCategory } from '../../lib/api';
 import CalendarHeader from './CalendarHeader';
 import DayView from './DayView';
 import WeekView from './WeekView';
@@ -49,12 +50,29 @@ export default function CalendarLayout() {
   const [currentView, setCurrentView] = useState<CalendarView>('week');
   const [currentDate, setCurrentDate] = useState<Date>(() => new Date());
   const [modalState, setModalState] = useState<ModalState>({ open: false });
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const today = useMemo(() => new Date(), []);
   const range = useMemo(() => getRange(currentDate, currentView), [currentDate, currentView]);
 
   const { events, isLoading, error, createEvent, updateEvent, deleteEvent, refetch } =
     useCalendarEvents({ from: range.from, to: range.to });
+
+  useEffect(() => {
+    getCategories().then(setCategories).catch(() => {});
+  }, []);
+
+  async function handleCreateCategory(name: string, color: string) {
+    await createCategory({ name, color });
+    const updated = await getCategories();
+    setCategories(updated);
+  }
+
+  async function handleUpdateCategory(id: string, name: string, color: string) {
+    await updateCategory(id, { name, color });
+    const updated = await getCategories();
+    setCategories(updated);
+  }
 
   function handleSlotClick(payload: SlotClickPayload) {
     setModalState({ open: true, initialSlot: { date: payload.date, time: payload.time } });
@@ -127,6 +145,9 @@ export default function CalendarLayout() {
         onCreateEvent={createEvent}
         onUpdateEvent={updateEvent}
         onDeleteEvent={deleteEvent}
+        categories={categories}
+        onCreateCategory={handleCreateCategory}
+        onUpdateCategory={handleUpdateCategory}
       />
     </LayoutRoot>
   );
