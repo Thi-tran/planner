@@ -55,3 +55,4 @@ public class Event {
         this.updatedAt = Instant.now();
     }
 }
+

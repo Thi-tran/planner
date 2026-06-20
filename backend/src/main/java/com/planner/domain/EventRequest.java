@@ -1,4 +1,4 @@
-package com.planner.dto;
+package com.planner.domain;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -35,3 +35,4 @@ public class EventRequest {
         return endTime.isAfter(startTime);
     }
 }
+
