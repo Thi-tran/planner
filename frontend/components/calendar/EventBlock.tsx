@@ -22,7 +22,7 @@ export default function EventBlock({
   totalColumns,
   onEventClick,
 }: EventBlockProps) {
-  const color = event.color ?? '#3b82f6';
+  const color = event.resolvedColor ?? '#3b82f6';
   const widthPct = 100 / totalColumns;
   const leftPct = (columnIndex / totalColumns) * 100;
 

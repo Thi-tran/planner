@@ -10,6 +10,7 @@ interface CalendarHeaderProps {
   currentView: CalendarView;
   onDateChange: (date: Date) => void;
   onViewChange: (view: CalendarView) => void;
+  onManageCategories: () => void;
 }
 
 function getDateLabel(date: Date, view: CalendarView): string {
@@ -53,6 +54,7 @@ export default function CalendarHeader({
   currentView,
   onDateChange,
   onViewChange,
+  onManageCategories,
 }: CalendarHeaderProps) {
   return (
     <Header>
@@ -73,6 +75,9 @@ export default function CalendarHeader({
           </ViewButton>
         ))}
       </ViewSwitcher>
+      <ManageButton onClick={onManageCategories}>
+        Manage categories
+      </ManageButton>
     </Header>
   );
 }
@@ -149,5 +154,18 @@ const ViewButton = styled.button<{ $active: boolean }>`
   }
   &:hover {
     background: ${({ $active }) => ($active ? '#2563eb' : '#f8fafc')};
+  }
+`;
+
+const ManageButton = styled.button`
+  padding: 6px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  color: #374151;
+  &:hover {
+    background: #f8fafc;
   }
 `;

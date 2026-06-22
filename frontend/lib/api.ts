@@ -1,4 +1,4 @@
-import type { CalendarEvent, EventRequest } from './types';
+import type { CalendarEvent, EventRequest, Category, CategoryRequest } from './types';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(path, {
@@ -41,4 +41,23 @@ export async function updateEvent(id: string, data: EventRequest): Promise<Calen
 
 export async function deleteEvent(id: string): Promise<void> {
   return request<void>(`/api/events/${id}`, { method: 'DELETE' });
+}
+
+
+export async function getCategories(): Promise<Category[]> {
+  return request<Category[]>('/api/categories');
+}
+
+export async function createCategory(data: CategoryRequest): Promise<Category> {
+  return request<Category>('/api/categories', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateCategory(id: string, data: CategoryRequest): Promise<Category> {
+  return request<Category>(`/api/categories/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
 }

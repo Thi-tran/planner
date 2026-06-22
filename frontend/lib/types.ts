@@ -6,7 +6,8 @@ export interface CalendarEvent {
   description?: string;
   startTime: string; // ISO 8601 UTC
   endTime: string;   // ISO 8601 UTC
-  color?: string;
+  categoryId?: string;
+  resolvedColor?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -16,5 +17,16 @@ export interface EventRequest {
   description?: string;
   startTime: string;
   endTime: string;
-  color?: string;
+  categoryId?: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  color: string;
+}
+
+export interface CategoryRequest {
+  name: string;
+  color: string;
 }

@@ -63,7 +63,7 @@ export default function MonthView({
                 {dayEvents.slice(0, 3).map((ev) => (
                   <EventChip
                     key={ev.id}
-                    $color={ev.color ?? '#3b82f6'}
+                    $color={ev.resolvedColor ?? '#3b82f6'}
                     onClick={(e) => { e.stopPropagation(); onEventClick(ev); }}
                     title={ev.title}
                   >

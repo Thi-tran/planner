@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import * as Dialog from '@radix-ui/react-dialog';
 import { format, addHours, parseISO } from 'date-fns';
-import type { CalendarEvent, EventRequest } from '../../lib/types';
-import { EVENT_COLORS } from '../../lib/constants';
+import type { CalendarEvent, EventRequest, Category } from '../../lib/types';
+import CategoryPicker from './CategoryPicker';
 
 function toLocalDatetimeValue(isoString: string): string {
   const d = parseISO(isoString);
@@ -31,6 +31,7 @@ interface EventModalProps {
   onCreateEvent: (data: EventRequest) => Promise<void>;
   onUpdateEvent: (id: string, data: EventRequest) => Promise<void>;
   onDeleteEvent: (id: string) => Promise<void>;
+  categories: Category[];
 }
 
 export default function EventModal({
@@ -39,6 +40,7 @@ export default function EventModal({
   onCreateEvent,
   onUpdateEvent,
   onDeleteEvent,
+  categories,
 }: EventModalProps) {
   const isEdit = !!state.initialEvent;
 
@@ -64,7 +66,7 @@ export default function EventModal({
   const [description, setDescription] = useState('');
   const [startTime, setStartTime] = useState(getDefaultStart());
   const [endTime, setEndTime] = useState(getDefaultEnd());
-  const [color, setColor] = useState(state.initialEvent?.color ?? EVENT_COLORS[0]);
+  const [categoryId, setCategoryId] = useState<string | null>(state.initialEvent?.categoryId ?? null);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -74,7 +76,7 @@ export default function EventModal({
       setDescription(state.initialEvent?.description ?? '');
       setStartTime(getDefaultStart());
       setEndTime(getDefaultEnd());
-      setColor(state.initialEvent?.color ?? EVENT_COLORS[0]);
+      setCategoryId(state.initialEvent?.categoryId ?? null);
       setError('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,7 +99,7 @@ export default function EventModal({
       description: description.trim() || undefined,
       startTime: startISO,
       endTime: endISO,
-      color: color || undefined,
+      categoryId: categoryId || undefined,
     };
 
     setSubmitting(true);
@@ -180,19 +182,12 @@ export default function EventModal({
             </Row>
 
             <Field>
-              <Label>Color</Label>
-              <ColorSwatches>
-                {EVENT_COLORS.map((c) => (
-                  <Swatch
-                    key={c}
-                    type="button"
-                    $color={c}
-                    $selected={color === c}
-                    onClick={() => setColor(c)}
-                    aria-label={c}
-                  />
-                ))}
-              </ColorSwatches>
+              <Label>Category</Label>
+              <CategoryPicker
+                categories={categories}
+                selectedId={categoryId}
+                onSelect={(id) => setCategoryId(id)}
+              />
             </Field>
 
             {error && <ErrorMsg>{error}</ErrorMsg>}
@@ -296,24 +291,6 @@ const Textarea = styled.textarea`
     border-color: #3b82f6;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
   }
-`;
-
-const ColorSwatches = styled.div`
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-`;
-
-const Swatch = styled.button<{ $color: string; $selected: boolean }>`
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: ${({ $color }) => $color};
-  border: 3px solid ${({ $selected, $color }) => ($selected ? '#1e293b' : $color)};
-  cursor: pointer;
-  padding: 0;
-  outline: none;
-  box-shadow: ${({ $selected }) => ($selected ? '0 0 0 2px #fff inset' : 'none')};
 `;
 
 const ErrorMsg = styled.p`
