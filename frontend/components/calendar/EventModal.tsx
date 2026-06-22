@@ -32,8 +32,6 @@ interface EventModalProps {
   onUpdateEvent: (id: string, data: EventRequest) => Promise<void>;
   onDeleteEvent: (id: string) => Promise<void>;
   categories: Category[];
-  onCreateCategory: (name: string, color: string) => Promise<void>;
-  onUpdateCategory: (id: string, name: string, color: string) => Promise<void>;
 }
 
 export default function EventModal({
@@ -43,8 +41,6 @@ export default function EventModal({
   onUpdateEvent,
   onDeleteEvent,
   categories,
-  onCreateCategory,
-  onUpdateCategory,
 }: EventModalProps) {
   const isEdit = !!state.initialEvent;
 
@@ -191,8 +187,6 @@ export default function EventModal({
                 categories={categories}
                 selectedId={categoryId}
                 onSelect={(id) => setCategoryId(id)}
-                onCreateCategory={onCreateCategory}
-                onUpdateCategory={onUpdateCategory}
               />
             </Field>
 

@@ -18,6 +18,7 @@ import DayView from './DayView';
 import WeekView from './WeekView';
 import MonthView from './MonthView';
 import EventModal from './EventModal';
+import ManageCategoriesModal from './ManageCategoriesModal';
 import type { SlotClickPayload } from './TimeGrid';
 
 interface ModalState {
@@ -50,6 +51,7 @@ export default function CalendarLayout() {
   const [currentView, setCurrentView] = useState<CalendarView>('week');
   const [currentDate, setCurrentDate] = useState<Date>(() => new Date());
   const [modalState, setModalState] = useState<ModalState>({ open: false });
+  const [showManageCategories, setShowManageCategories] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
 
   const today = useMemo(() => new Date(), []);
@@ -94,6 +96,7 @@ export default function CalendarLayout() {
         currentView={currentView}
         onDateChange={setCurrentDate}
         onViewChange={setCurrentView}
+        onManageCategories={() => setShowManageCategories(true)}
       />
 
       {isLoading && (
@@ -145,6 +148,12 @@ export default function CalendarLayout() {
         onCreateEvent={createEvent}
         onUpdateEvent={updateEvent}
         onDeleteEvent={deleteEvent}
+        categories={categories}
+      />
+
+      <ManageCategoriesModal
+        open={showManageCategories}
+        onClose={() => setShowManageCategories(false)}
         categories={categories}
         onCreateCategory={handleCreateCategory}
         onUpdateCategory={handleUpdateCategory}
