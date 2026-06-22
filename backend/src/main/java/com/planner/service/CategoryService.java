@@ -82,4 +82,20 @@ public class CategoryService {
 
         return mapper.toResponse(repository.save(entity));
     }
+
+    /**
+     * Deletes a category by ID.
+     * Events associated with this category will have their category_id set to NULL
+     * automatically by the database ON DELETE SET NULL constraint.
+     * 
+     * @param id the UUID of the category to delete
+     * @throws ResourceNotFoundException if the category does not exist
+     */
+    @Transactional
+    public void delete(UUID id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Category not found: " + id);
+        }
+        repository.deleteById(id);
+    }
 }

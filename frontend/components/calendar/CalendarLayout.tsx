@@ -12,7 +12,7 @@ import {
 } from 'date-fns';
 import type { CalendarView, CalendarEvent, Category } from '../../lib/types';
 import { useCalendarEvents } from '../../hooks/useCalendarEvents';
-import { getCategories, createCategory, updateCategory } from '../../lib/api';
+import { getCategories, createCategory, updateCategory, deleteCategory } from '../../lib/api';
 import CalendarHeader from './CalendarHeader';
 import DayView from './DayView';
 import WeekView from './WeekView';
@@ -74,6 +74,14 @@ export default function CalendarLayout() {
     await updateCategory(id, { name, color });
     const updated = await getCategories();
     setCategories(updated);
+  }
+
+  async function handleDeleteCategory(id: string) {
+    await deleteCategory(id);
+    const updated = await getCategories();
+    setCategories(updated);
+    // Refetch events to show updated colors immediately
+    refetch();
   }
 
   function handleSlotClick(payload: SlotClickPayload) {
@@ -157,6 +165,7 @@ export default function CalendarLayout() {
         categories={categories}
         onCreateCategory={handleCreateCategory}
         onUpdateCategory={handleUpdateCategory}
+        onDeleteCategory={handleDeleteCategory}
       />
     </LayoutRoot>
   );

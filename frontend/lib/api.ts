@@ -61,3 +61,7 @@ export async function updateCategory(id: string, data: CategoryRequest): Promise
     body: JSON.stringify(data),
   });
 }
+
+export async function deleteCategory(id: string): Promise<void> {
+  return request<void>(`/api/categories/${id}`, { method: 'DELETE' });
+}

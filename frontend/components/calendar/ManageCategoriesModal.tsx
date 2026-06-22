@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import * as Dialog from '@radix-ui/react-dialog';
 import type { Category } from '../../lib/types';
 import { EVENT_COLORS } from '../../lib/constants';
+import ConfirmDialog from './ConfirmDialog';
 
 interface ManageCategoriesModalProps {
   open: boolean;
@@ -12,6 +13,7 @@ interface ManageCategoriesModalProps {
   categories: Category[];
   onCreateCategory: (name: string, color: string) => Promise<void>;
   onUpdateCategory: (id: string, name: string, color: string) => Promise<void>;
+  onDeleteCategory: (id: string) => Promise<void>;
 }
 
 export default function ManageCategoriesModal({
@@ -20,16 +22,23 @@ export default function ManageCategoriesModal({
   categories,
   onCreateCategory,
   onUpdateCategory,
+  onDeleteCategory,
 }: ManageCategoriesModalProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showNewForm, setShowNewForm] = useState(false);
   const [error, setError] = useState('');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
 
   useEffect(() => {
     if (open) {
       setEditingId(null);
       setShowNewForm(false);
       setError('');
+      setDeletingId(null);
+      setShowConfirmDelete(false);
+      setCategoryToDelete(null);
     }
   }, [open]);
 
@@ -63,6 +72,29 @@ export default function ManageCategoriesModal({
   function handleNewFormStart() {
     setShowNewForm(true);
     setEditingId(null);
+  }
+
+  async function handleDelete() {
+    if (!categoryToDelete) return;
+    setError('');
+    setDeletingId(categoryToDelete.id);
+    try {
+      await onDeleteCategory(categoryToDelete.id);
+      // Success: close dialog and clear state
+      setShowConfirmDelete(false);
+      setCategoryToDelete(null);
+    } catch (err) {
+      // Error: close dialog to show error in main modal
+      setShowConfirmDelete(false);
+      setError(err instanceof Error ? err.message : 'Failed to delete category');
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
+  function handleDeleteStart(category: Category) {
+    setCategoryToDelete(category);
+    setShowConfirmDelete(true);
   }
 
   return (
@@ -108,13 +140,23 @@ export default function ManageCategoriesModal({
                   <CategoryRow>
                     <ColorDot $color={cat.color} />
                     <CategoryName>{cat.name}</CategoryName>
-                    <EditIconButton
-                      onClick={() => handleEditStart(cat.id)}
-                      title="Edit category"
-                      aria-label={`Edit ${cat.name}`}
-                    >
-                      ✏️
-                    </EditIconButton>
+                    <ButtonGroup>
+                      <IconButton
+                        onClick={() => handleEditStart(cat.id)}
+                        title="Edit category"
+                        aria-label={`Edit ${cat.name}`}
+                      >
+                        <span aria-hidden="true">✏️</span>
+                      </IconButton>
+                      <DeleteIconButton
+                        onClick={() => handleDeleteStart(cat)}
+                        title="Delete category"
+                        aria-label={`Delete ${cat.name}`}
+                        disabled={deletingId === cat.id}
+                      >
+                        <span aria-hidden="true">🗑️</span>
+                      </DeleteIconButton>
+                    </ButtonGroup>
                   </CategoryRow>
                 )}
               </React.Fragment>
@@ -134,6 +176,17 @@ export default function ManageCategoriesModal({
             </AddButton>
           )}
         </Content>
+        <ConfirmDialog
+          open={showConfirmDelete}
+          onOpenChange={setShowConfirmDelete}
+          title={`Delete category "${categoryToDelete?.name}"?`}
+          description="Events in this category will continue to exist but will be shown in the default blue color."
+          confirmText="Delete"
+          cancelText="Cancel"
+          variant="danger"
+          loading={deletingId !== null}
+          onConfirm={handleDelete}
+        />
       </Dialog.Portal>
     </Dialog.Root>
   );
@@ -383,7 +436,13 @@ const CategoryName = styled.span`
   white-space: nowrap;
 `;
 
-const EditIconButton = styled.button`
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+`;
+
+const IconButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
@@ -391,9 +450,19 @@ const EditIconButton = styled.button`
   padding: 4px 6px;
   border-radius: 4px;
   opacity: 0.5;
-  &:hover {
+  &:hover:not(:disabled) {
     opacity: 1;
     background: #e2e8f0;
+  }
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+`;
+
+const DeleteIconButton = styled(IconButton)`
+  &:hover:not(:disabled) {
+    background: #fee2e2;
   }
 `;
 

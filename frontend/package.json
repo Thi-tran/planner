@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@radix-ui/react-alert-dialog": "^1.1.17",
     "@radix-ui/react-dialog": "^1.1.16",
     "@types/styled-components": "^5.1.36",
     "date-fns": "^4.4.0",
