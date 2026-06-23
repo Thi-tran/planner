@@ -495,10 +495,15 @@ const MiniForm = styled.form`
 
 const MiniInput = styled.input`
   padding: 8px 10px;
+  background: #fff;
+  color: #0f172a;
   border: 1px solid #cbd5e1;
   border-radius: 4px;
   font-size: 14px;
   outline: none;
+  &::placeholder {
+    color: #64748b;
+  }
   &:focus {
     border-color: #3b82f6;
   }
