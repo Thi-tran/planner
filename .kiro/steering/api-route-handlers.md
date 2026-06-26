@@ -100,7 +100,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const res = await fetchWithInsecureHttps(`${BACKEND}/api/resources/${id}`, { 
+  const res = await fetch(`${BACKEND}/api/resources/${id}`, { 
     method: 'DELETE' 
   });
   
