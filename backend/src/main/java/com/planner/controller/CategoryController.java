@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,5 +69,22 @@ public class CategoryController {
     @PutMapping("/{id}")
     public CategoryResponse update(@PathVariable UUID id, @RequestBody @Valid CategoryRequest req) {
         return service.update(id, req);
+    }
+
+    /**
+     * Deletes a category by ID.
+     * Events associated with this category will have their category_id set to NULL
+     * automatically by the database ON DELETE SET NULL constraint.
+     * 
+     * DELETE /api/categories/{id}
+     *
+     * @param id the UUID of the category to delete
+     * @return 204 No Content on success
+     * @throws ResourceNotFoundException if category not found (returns 404)
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

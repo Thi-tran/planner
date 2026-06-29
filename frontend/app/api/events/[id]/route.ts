@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchWithInsecureHttps } from '@/lib/server-fetch';
 
 const BACKEND = process.env.API_URL ?? 'http://localhost:8080';
 
@@ -8,7 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const res = await fetchWithInsecureHttps(`${BACKEND}/api/events/${id}`, { cache: 'no-store' });
+  const res = await fetch(`${BACKEND}/api/events/${id}`, { cache: 'no-store' });
   const data = await res.json();
   return NextResponse.json(data, { status: res.status });
 }
@@ -19,7 +18,7 @@ export async function PUT(
 ) {
   const { id } = await params;
   const body = await req.json();
-  const res = await fetchWithInsecureHttps(`${BACKEND}/api/events/${id}`, {
+  const res = await fetch(`${BACKEND}/api/events/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -33,7 +32,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const res = await fetchWithInsecureHttps(`${BACKEND}/api/events/${id}`, { method: 'DELETE' });
+  const res = await fetch(`${BACKEND}/api/events/${id}`, { method: 'DELETE' });
   if (res.status === 204) return new NextResponse(null, { status: 204 });
   const data = await res.json();
   return NextResponse.json(data, { status: res.status });
