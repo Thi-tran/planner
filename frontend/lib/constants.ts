@@ -11,3 +11,10 @@ export const EVENT_COLORS = [
   '#14b8a6', // teal
   '#f97316', // orange
 ];
+
+export const PROJECT_COLORS = [
+  { name: 'Sky Cyan', hex: '#5EC4CD' },
+  { name: 'Blush Pink', hex: '#E91E8C' },
+  { name: 'Soft Indigo', hex: '#6366F1' },
+  { name: 'Sage Green', hex: '#10B981' },
+] as const;

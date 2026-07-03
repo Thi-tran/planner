@@ -44,5 +44,20 @@ public interface EventRepository extends JpaRepository<EventEntity, UUID>, JpaSp
      */
     @EntityGraph(attributePaths = {"category"})
     Optional<EventEntity> findById(UUID id);
+
+    /**
+     * Finds all events that belong to a specific project and overlap with the given time range.
+     * An event overlaps when: startTime < to AND endTime > from
+     * 
+     * Eagerly loads the category association to avoid N+1 queries.
+     * 
+     * @param projectId the UUID of the project to filter by
+     * @param to the exclusive end time of the range
+     * @param from the inclusive start time of the range
+     * @return a list of events for the project overlapping with [from, to)
+     */
+    @EntityGraph(attributePaths = {"category"})
+    List<EventEntity> findByProjectIdAndStartTimeLessThanAndEndTimeGreaterThan(
+            UUID projectId, Instant to, Instant from);
 }
 

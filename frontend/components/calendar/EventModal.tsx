@@ -32,6 +32,7 @@ interface EventModalProps {
   onUpdateEvent: (id: string, data: EventRequest) => Promise<void>;
   onDeleteEvent: (id: string) => Promise<void>;
   categories: Category[];
+  activeProjectId: string | null;
 }
 
 export default function EventModal({
@@ -41,6 +42,7 @@ export default function EventModal({
   onUpdateEvent,
   onDeleteEvent,
   categories,
+  activeProjectId,
 }: EventModalProps) {
   const isEdit = !!state.initialEvent;
 
@@ -87,6 +89,8 @@ export default function EventModal({
     setError('');
 
     if (!title.trim()) { setError('Title is required'); return; }
+    if (!activeProjectId) { setError('No active project selected'); return; }
+    
     const startISO = new Date(startTime).toISOString();
     const endISO = new Date(endTime).toISOString();
     if (new Date(endISO) <= new Date(startISO)) {
@@ -100,6 +104,7 @@ export default function EventModal({
       startTime: startISO,
       endTime: endISO,
       categoryId: categoryId || undefined,
+      projectId: activeProjectId,
     };
 
     setSubmitting(true);
