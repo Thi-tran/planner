@@ -38,7 +38,7 @@ public class ProjectEntity {
 
     @Column(nullable = false, length = 20)
     @Builder.Default
-    private String status = "in progress";
+    private String status = "In Progress";
 
     @Column(name = "last_accessed_at")
     private Instant lastAccessedAt;
