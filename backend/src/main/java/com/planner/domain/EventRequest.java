@@ -37,6 +37,9 @@ public class EventRequest {
 
     private UUID categoryId;
 
+    @NotNull(message = "projectId is required")
+    private UUID projectId;
+
     /**
      * Validates that the end time is after the start time.
      * This custom validation method is called after field validations.

@@ -18,6 +18,7 @@ export interface EventRequest {
   startTime: string;
   endTime: string;
   categoryId?: string;
+  projectId: string;
 }
 
 export interface Category {
@@ -29,4 +30,26 @@ export interface Category {
 export interface CategoryRequest {
   name: string;
   color: string;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  startDate: string; // ISO date string
+  endDate?: string;
+  color: 'Sky Cyan' | 'Blush Pink' | 'Soft Indigo' | 'Sage Green';
+  status: 'in progress' | 'completed' | 'on hold' | 'planning';
+  lastAccessedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProjectRequest {
+  name: string;
+  description?: string;
+  startDate: string;
+  endDate?: string;
+  color: string;
+  status?: string;
 }

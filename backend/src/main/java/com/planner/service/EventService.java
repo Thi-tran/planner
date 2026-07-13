@@ -32,18 +32,27 @@ public class EventService {
     private final EventMapper mapper;
 
     /**
-     * Finds all events within a specified time range.
+     * Finds all events within a specified time range, optionally filtered by project.
      * 
      * If no date range is provided, defaults to 7 days from today.
      * Returns all events that overlap with [from, to).
      * 
      * @param from the start of the time range (defaults to today if null)
      * @param to the end of the time range (defaults to 7 days from 'from' if null)
+     * @param projectId optional project filter (if null, returns all events)
      * @return a list of EventResponse objects for events in the range
      */
-    public List<EventResponse> findEvents(Instant from, Instant to) {
+    public List<EventResponse> findEvents(Instant from, Instant to, UUID projectId) {
         if (from == null) from = Instant.now().truncatedTo(ChronoUnit.DAYS);
         if (to == null)   to = from.plus(7, ChronoUnit.DAYS);
+        
+        if (projectId != null) {
+            return repository.findByProjectIdAndStartTimeLessThanAndEndTimeGreaterThan(projectId, to, from)
+                    .stream()
+                    .map(mapper::toResponse)
+                    .toList();
+        }
+        
         return repository.findByStartTimeLessThanAndEndTimeGreaterThan(to, from)
                 .stream()
                 .map(mapper::toResponse)

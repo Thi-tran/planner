@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
+import { useSearchParams, useRouter } from 'next/navigation';
 import {
   startOfWeek,
   endOfWeek,
@@ -13,6 +14,8 @@ import {
 import type { CalendarView, CalendarEvent, Category } from '../../lib/types';
 import { useCalendarEvents } from '../../hooks/useCalendarEvents';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../../lib/api';
+import { getActiveProject } from '../../lib/projectContext';
+import Sidebar from '../layout/Sidebar';
 import CalendarHeader from './CalendarHeader';
 import DayView from './DayView';
 import WeekView from './WeekView';
@@ -48,21 +51,60 @@ function getRange(date: Date, view: CalendarView): { from: Date; to: Date } {
 }
 
 export default function CalendarLayout() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get('projectId');
+  const startDateParam = searchParams.get('startDate');
+
+  // Redirect to projects if no projectId
+  useEffect(() => {
+    if (!projectId) {
+      router.push('/projects');
+    }
+  }, [projectId, router]);
+
   const [currentView, setCurrentView] = useState<CalendarView>('week');
-  const [currentDate, setCurrentDate] = useState<Date>(() => new Date());
+  const [currentDate, setCurrentDate] = useState<Date>(() => {
+    // Initialize with project start date if provided, otherwise use today
+    if (startDateParam) {
+      try {
+        return new Date(startDateParam);
+      } catch {
+        return new Date();
+      }
+    }
+    return new Date();
+  });
   const [modalState, setModalState] = useState<ModalState>({ open: false });
   const [showManageCategories, setShowManageCategories] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+
+  // Focus on project start date when startDate param changes
+  useEffect(() => {
+    if (startDateParam) {
+      try {
+        const startDate = new Date(startDateParam);
+        setCurrentDate(startDate);
+      } catch {
+        // Invalid date, ignore
+      }
+    }
+  }, [startDateParam]);
 
   const today = useMemo(() => new Date(), []);
   const range = useMemo(() => getRange(currentDate, currentView), [currentDate, currentView]);
 
   const { events, isLoading, error, createEvent, updateEvent, deleteEvent, refetch } =
-    useCalendarEvents({ from: range.from, to: range.to });
+    useCalendarEvents({ from: range.from, to: range.to, projectId: projectId || undefined });
 
   useEffect(() => {
     getCategories().then(setCategories).catch(() => {});
   }, []);
+
+  // Don't render calendar content if no projectId
+  if (!projectId) {
+    return null;
+  }
 
   async function handleCreateCategory(name: string, color: string) {
     await createCategory({ name, color });
@@ -98,14 +140,16 @@ export default function CalendarLayout() {
   }
 
   return (
-    <LayoutRoot>
-      <CalendarHeader
-        currentDate={currentDate}
-        currentView={currentView}
-        onDateChange={setCurrentDate}
-        onViewChange={setCurrentView}
-        onManageCategories={() => setShowManageCategories(true)}
-      />
+    <LayoutContainer>
+      <Sidebar activeProjectId={projectId} />
+      <LayoutRoot>
+        <CalendarHeader
+          currentDate={currentDate}
+          currentView={currentView}
+          onDateChange={setCurrentDate}
+          onViewChange={setCurrentView}
+          onManageCategories={() => setShowManageCategories(true)}
+        />
 
       {isLoading && (
         <LoadingOverlay>
@@ -157,6 +201,7 @@ export default function CalendarLayout() {
         onUpdateEvent={updateEvent}
         onDeleteEvent={deleteEvent}
         categories={categories}
+        activeProjectId={projectId}
       />
 
       <ManageCategoriesModal
@@ -168,10 +213,18 @@ export default function CalendarLayout() {
         onDeleteCategory={handleDeleteCategory}
       />
     </LayoutRoot>
+    </LayoutContainer>
   );
 }
 
+const LayoutContainer = styled.div`
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+`;
+
 const LayoutRoot = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   height: 100vh;

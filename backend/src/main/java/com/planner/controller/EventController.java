@@ -37,19 +37,21 @@ public class EventController {
     private final EventService service;
 
     /**
-     * Retrieves all events within an optional time range.
+     * Retrieves all events within an optional time range, optionally filtered by project.
      * 
-     * GET /api/events?from=2026-06-13T00:00:00Z&to=2026-06-20T00:00:00Z
+     * GET /api/events?from=2026-06-13T00:00:00Z&to=2026-06-20T00:00:00Z&projectId=...
      * 
      * @param from the start of the time range (optional, defaults to today)
      * @param to the end of the time range (optional, defaults to 7 days from 'from')
+     * @param projectId optional project filter (if null, returns all events)
      * @return a list of events matching the criteria
      */
     @GetMapping
     public List<EventResponse> list(
             @RequestParam(required = false) Instant from,
-            @RequestParam(required = false) Instant to) {
-        return service.findEvents(from, to);
+            @RequestParam(required = false) Instant to,
+            @RequestParam(required = false) UUID projectId) {
+        return service.findEvents(from, to, projectId);
     }
 
     /**

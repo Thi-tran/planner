@@ -68,6 +68,7 @@ public class EventMapper {
         entity.setDescription(request.getDescription());
         entity.setStartTime(request.getStartTime());
         entity.setEndTime(request.getEndTime());
+        entity.setProjectId(request.getProjectId());
         return entity;
     }
 }

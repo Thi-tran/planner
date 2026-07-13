@@ -68,6 +68,10 @@ public class EventEntity implements Serializable {
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
+    @Setter
+    @Column(name = "project_id")
+    private UUID projectId;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 

@@ -7,6 +7,7 @@ import * as api from '../lib/api';
 interface UseCalendarEventsOptions {
   from: Date;
   to: Date;
+  projectId?: string;
 }
 
 interface UseCalendarEventsResult {
@@ -19,7 +20,7 @@ interface UseCalendarEventsResult {
   refetch: () => Promise<void>;
 }
 
-export function useCalendarEvents({ from, to }: UseCalendarEventsOptions): UseCalendarEventsResult {
+export function useCalendarEvents({ from, to, projectId }: UseCalendarEventsOptions): UseCalendarEventsResult {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,14 +32,14 @@ export function useCalendarEvents({ from, to }: UseCalendarEventsOptions): UseCa
     setIsLoading(true);
     setError(null);
     try {
-      const data = await api.getEvents(new Date(fromISO), new Date(toISO));
+      const data = await api.getEvents(new Date(fromISO), new Date(toISO), projectId);
       setEvents(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load events');
     } finally {
       setIsLoading(false);
     }
-  }, [fromISO, toISO]);
+  }, [fromISO, toISO, projectId]);
 
   useEffect(() => {
     fetchEvents();
