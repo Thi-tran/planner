@@ -12,17 +12,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class CategoryMapper {
 
-    /**
-     * Converts a CategoryEntity to a CategoryResponse (for API responses).
-     * 
-     * @param entity the CategoryEntity to convert
-     * @return a CategoryResponse with the entity's data
-     */
     public CategoryResponse toResponse(CategoryEntity entity) {
         return new CategoryResponse(
                 entity.getId(),
                 entity.getName(),
-                entity.getColor()
+                entity.getColor(),
+                entity.getProjectId()
         );
     }
 }

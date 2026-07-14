@@ -3,18 +3,13 @@ package com.planner.mapper;
 import com.planner.domain.ProjectRequest;
 import com.planner.domain.ProjectResponse;
 import com.planner.model.entity.ProjectEntity;
+import com.planner.model.entity.Role;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProjectMapper {
 
-    /**
-     * Maps a ProjectEntity to a ProjectResponse DTO.
-     *
-     * @param entity the project entity
-     * @return the project response DTO
-     */
-    public ProjectResponse toResponse(ProjectEntity entity) {
+    public ProjectResponse toResponse(ProjectEntity entity, Role role) {
         return new ProjectResponse(
                 entity.getId(),
                 entity.getName(),
@@ -25,16 +20,15 @@ public class ProjectMapper {
                 entity.getStatus(),
                 entity.getLastAccessedAt(),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                role
         );
     }
 
-    /**
-     * Maps a ProjectRequest DTO to a new ProjectEntity.
-     *
-     * @param request the project request DTO
-     * @return a new project entity
-     */
+    public ProjectResponse toResponse(ProjectEntity entity) {
+        return toResponse(entity, null);
+    }
+
     public ProjectEntity toEntity(ProjectRequest request) {
         return ProjectEntity.builder()
                 .name(request.getName())
@@ -46,13 +40,6 @@ public class ProjectMapper {
                 .build();
     }
 
-    /**
-     * Updates an existing ProjectEntity with data from a ProjectRequest.
-     * Does not update id, timestamps, or lastAccessedAt.
-     *
-     * @param request the project request DTO
-     * @param entity the existing project entity to update
-     */
     public void mapRequestToEntity(ProjectRequest request, ProjectEntity entity) {
         entity.setName(request.getName());
         entity.setDescription(request.getDescription());

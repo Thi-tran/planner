@@ -6,6 +6,8 @@ import com.planner.exception.ResourceNotFoundException;
 import com.planner.mapper.CategoryMapper;
 import com.planner.model.CategoryRepository;
 import com.planner.model.entity.CategoryEntity;
+import com.planner.model.entity.Role;
+import com.planner.security.ProjectAccessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,67 +15,49 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Service for managing Category operations.
- * 
- * Orchestrates business logic for category CRUD operations
- * including uniqueness validation.
- */
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository repository;
     private final CategoryMapper mapper;
+    private final ProjectAccessService projectAccessService;
 
-    /**
-     * Returns all categories sorted alphabetically by name.
-     *
-     * @return list of all categories
-     */
-    public List<CategoryResponse> listAll() {
-        return repository.findAllByOrderByNameAsc()
+    public List<CategoryResponse> listByProject(UUID projectId, UUID userId) {
+        projectAccessService.requireRole(projectId, userId, Role.VIEWER);
+        return repository.findByProjectIdOrderByNameAsc(projectId)
                 .stream()
                 .map(mapper::toResponse)
                 .toList();
     }
 
-    /**
-     * Creates a new category.
-     * 
-     * @param req the category data
-     * @return the created category
-     * @throws IllegalArgumentException if a category with the same name already exists
-     */
     @Transactional
-    public CategoryResponse create(CategoryRequest req) {
-        if (repository.existsByNameIgnoreCase(req.getName())) {
+    public CategoryResponse create(CategoryRequest req, UUID userId) {
+        UUID projectId = req.getProjectId();
+        projectAccessService.requireRole(projectId, userId, Role.EDITOR);
+
+        if (repository.existsByProjectIdAndNameIgnoreCase(projectId, req.getName())) {
             throw new IllegalArgumentException("Category name already exists: " + req.getName());
         }
 
         CategoryEntity entity = CategoryEntity.builder()
                 .name(req.getName())
                 .color(req.getColor())
+                .projectId(projectId)
                 .build();
 
         return mapper.toResponse(repository.save(entity));
     }
 
-    /**
-     * Updates an existing category's name and/or color.
-     * 
-     * @param id the UUID of the category to update
-     * @param req the new category data
-     * @return the updated category
-     * @throws ResourceNotFoundException if the category does not exist
-     * @throws IllegalArgumentException if another category with the same name already exists
-     */
     @Transactional
-    public CategoryResponse update(UUID id, CategoryRequest req) {
+    public CategoryResponse update(UUID id, CategoryRequest req, UUID userId) {
         CategoryEntity entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found: " + id));
 
-        if (repository.existsByNameIgnoreCaseAndIdNot(req.getName(), id)) {
+        UUID projectId = entity.getProjectId();
+        projectAccessService.requireRole(projectId, userId, Role.EDITOR);
+
+        if (repository.existsByProjectIdAndNameIgnoreCaseAndIdNot(projectId, req.getName(), id)) {
             throw new IllegalArgumentException("Category name already exists: " + req.getName());
         }
 
@@ -83,19 +67,12 @@ public class CategoryService {
         return mapper.toResponse(repository.save(entity));
     }
 
-    /**
-     * Deletes a category by ID.
-     * Events associated with this category will have their category_id set to NULL
-     * automatically by the database ON DELETE SET NULL constraint.
-     * 
-     * @param id the UUID of the category to delete
-     * @throws ResourceNotFoundException if the category does not exist
-     */
     @Transactional
-    public void delete(UUID id) {
-        if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Category not found: " + id);
-        }
+    public void delete(UUID id, UUID userId) {
+        CategoryEntity entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found: " + id));
+
+        projectAccessService.requireRole(entity.getProjectId(), userId, Role.EDITOR);
         repository.deleteById(id);
     }
 }

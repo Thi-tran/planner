@@ -9,19 +9,9 @@ import java.util.UUID;
  * Uses a Java record for immutability.
  */
 public record CategoryResponse(
-        /**
-         * Unique identifier of the category
-         */
         UUID id,
-
-        /**
-         * Category name
-         */
         String name,
-
-        /**
-         * Category color in hex format (e.g., #3b82f6)
-         */
-        String color
+        String color,
+        UUID projectId
 ) {
 }
