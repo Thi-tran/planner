@@ -19,6 +19,12 @@ A planner app for managing plans. Built with Next.js (frontend) and Spring Boot 
 
 ### 1. Set up environment variables
 
+> **All credentials** (`GOOGLE_CLIENT_ID`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`) are stored in **GCP Secret Manager** under the project. Retrieve them from the [GCP Console → Secret Manager](https://console.cloud.google.com/security/secret-manager) or via the CLI:
+> ```bash
+> gcloud secrets versions access latest --secret="google-client-id"
+> gcloud secrets versions access latest --secret="google-client-secret"
+> ```
+
 **Repo root** — used by Docker Compose to pass credentials to the backend:
 
 ```bash
