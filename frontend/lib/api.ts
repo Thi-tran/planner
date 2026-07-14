@@ -1,4 +1,4 @@
-import type { CalendarEvent, EventRequest, Category, CategoryRequest, Project, ProjectRequest } from './types';
+import type { CalendarEvent, EventRequest, Category, CategoryRequest, Project, ProjectRequest, MembershipResponse, Role } from './types';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(path, {
@@ -45,12 +45,12 @@ export async function deleteEvent(id: string): Promise<void> {
 }
 
 
-export async function getCategories(): Promise<Category[]> {
-  return request<Category[]>('/api/categories');
+export async function getCategories(projectId: string): Promise<Category[]> {
+  return request<Category[]>(`/api/categories?projectId=${encodeURIComponent(projectId)}`);
 }
 
-export async function createCategory(data: CategoryRequest): Promise<Category> {
-  return request<Category>('/api/categories', {
+export async function createCategory(projectId: string, data: CategoryRequest): Promise<Category> {
+  return request<Category>(`/api/categories?projectId=${encodeURIComponent(projectId)}`, {
     method: 'POST',
     body: JSON.stringify(data),
   });
@@ -95,4 +95,26 @@ export async function deleteProject(id: string): Promise<void> {
 
 export async function updateProjectAccess(id: string): Promise<Project> {
   return request<Project>(`/api/projects/${id}/access`, { method: 'PATCH' });
+}
+
+export async function getMembers(projectId: string): Promise<MembershipResponse[]> {
+  return request<MembershipResponse[]>(`/api/projects/${projectId}/members`);
+}
+
+export async function inviteMember(projectId: string, data: { email: string; role: Role }): Promise<MembershipResponse> {
+  return request<MembershipResponse>(`/api/projects/${projectId}/members`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateMemberRole(projectId: string, membershipId: string, data: { role: Role }): Promise<MembershipResponse> {
+  return request<MembershipResponse>(`/api/projects/${projectId}/members/${membershipId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function removeMember(projectId: string, membershipId: string): Promise<void> {
+  return request<void>(`/api/projects/${projectId}/members/${membershipId}`, { method: 'DELETE' });
 }

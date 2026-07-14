@@ -10,6 +10,7 @@ export interface ActiveProject {
   id: string;
   name: string;
   color: string;
+  role?: 'OWNER' | 'EDITOR' | 'VIEWER';
 }
 
 export function getActiveProject(): ActiveProject | null {

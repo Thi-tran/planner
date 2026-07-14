@@ -32,7 +32,11 @@ export default function MyProjectsPage() {
       setError(null);
       const data = await getProjects();
       setProjects(data);
-    } catch (err) {
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message.includes('401')) {
+        router.replace('/signin');
+        return;
+      }
       setError('Failed to load projects');
       console.error(err);
     } finally {

@@ -32,6 +32,18 @@ export interface CategoryRequest {
   color: string;
 }
 
+export type Role = 'OWNER' | 'EDITOR' | 'VIEWER';
+export type MembershipStatus = 'ACTIVE' | 'PENDING';
+
+export interface MembershipResponse {
+  id: string;
+  userId: string | null;
+  email: string;
+  displayName: string | null;
+  role: Role;
+  status: MembershipStatus;
+}
+
 export interface Project {
   id: string;
   name: string;
@@ -43,6 +55,7 @@ export interface Project {
   lastAccessedAt?: string;
   createdAt: string;
   updatedAt: string;
+  role?: Role;
 }
 
 export interface ProjectRequest {

@@ -98,8 +98,8 @@ export default function CalendarLayout() {
     useCalendarEvents({ from: range.from, to: range.to, projectId: projectId || undefined });
 
   useEffect(() => {
-    getCategories().then(setCategories).catch(() => {});
-  }, []);
+    if (projectId) getCategories(projectId).then(setCategories).catch(() => { });
+  }, [projectId]);
 
   // Don't render calendar content if no projectId
   if (!projectId) {
@@ -107,20 +107,21 @@ export default function CalendarLayout() {
   }
 
   async function handleCreateCategory(name: string, color: string) {
-    await createCategory({ name, color });
-    const updated = await getCategories();
+    if (!projectId) return;
+    await createCategory(projectId, { name, color });
+    const updated = await getCategories(projectId);
     setCategories(updated);
   }
 
   async function handleUpdateCategory(id: string, name: string, color: string) {
     await updateCategory(id, { name, color });
-    const updated = await getCategories();
+    const updated = await getCategories(projectId!);
     setCategories(updated);
   }
 
   async function handleDeleteCategory(id: string) {
     await deleteCategory(id);
-    const updated = await getCategories();
+    const updated = await getCategories(projectId!);
     setCategories(updated);
     // Refetch events to show updated colors immediately
     refetch();
