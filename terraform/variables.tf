@@ -20,3 +20,8 @@ variable "cors_allowed_origins" {
   type        = string
   default     = "*"
 }
+
+variable "google_client_id" {
+  description = "Google OAuth2 client ID (public) used by the backend to validate JWT audience"
+  type        = string
+}
