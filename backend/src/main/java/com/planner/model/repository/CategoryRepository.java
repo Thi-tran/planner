@@ -40,4 +40,10 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, UUID> 
      * @return sorted list of all categories
      */
     List<CategoryEntity> findAllByOrderByNameAsc();
+
+    List<CategoryEntity> findByProjectIdOrderByNameAsc(UUID projectId);
+
+    boolean existsByProjectIdAndNameIgnoreCase(UUID projectId, String name);
+
+    boolean existsByProjectIdAndNameIgnoreCaseAndIdNot(UUID projectId, String name, UUID id);
 }

@@ -1,11 +1,14 @@
 package com.planner.domain;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.UUID;
 
 /**
  * DTO for creating or updating a Category.
@@ -24,4 +27,7 @@ public class CategoryRequest {
     @NotBlank(message = "color is required")
     @Pattern(regexp = "^#[0-9A-Fa-f]{6}$", message = "color must be a valid hex color (e.g. #3b82f6)")
     private String color;
+
+    @NotNull(message = "projectId is required")
+    private UUID projectId;
 }

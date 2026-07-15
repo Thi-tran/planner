@@ -1,5 +1,7 @@
 package com.planner.domain;
 
+import com.planner.model.entity.Role;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -14,6 +16,7 @@ public record ProjectResponse(
         String status,
         Instant lastAccessedAt,
         Instant createdAt,
-        Instant updatedAt
+        Instant updatedAt,
+        Role role
 ) {
 }

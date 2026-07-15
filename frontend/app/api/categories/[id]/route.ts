@@ -1,29 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { proxyToBackend } from '../../../../lib/proxy';
 
-const BACKEND = process.env.API_URL ?? 'http://localhost:8080';
-
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const body = await req.json();
-  const res = await fetch(`${BACKEND}/api/categories/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json();
-  return NextResponse.json(data, { status: res.status });
+  return proxyToBackend(req, `/api/categories/${id}`, { method: 'PUT' });
 }
 
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const res = await fetch(`${BACKEND}/api/categories/${id}`, { method: 'DELETE' });
-  if (res.status === 204) return new NextResponse(null, { status: 204 });
-  const data = await res.json();
-  return NextResponse.json(data, { status: res.status });
+  return proxyToBackend(req, `/api/categories/${id}`, { method: 'DELETE', body: null });
 }

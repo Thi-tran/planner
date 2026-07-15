@@ -71,6 +71,11 @@ resource "google_cloud_run_v2_service" "backend" {
         value = var.cors_allowed_origins
       }
 
+      env {
+        name  = "GOOGLE_CLIENT_ID"
+        value = var.google_client_id
+      }
+
       startup_probe {
         http_get {
           path = "/actuator/health"

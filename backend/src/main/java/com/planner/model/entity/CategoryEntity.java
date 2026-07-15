@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,7 +28,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "categories")
+@Table(name = "categories", uniqueConstraints = @UniqueConstraint(name = "uq__categories__project_name", columnNames = {"project_id", "name"}))
 public class CategoryEntity implements Serializable {
 
     @Id
@@ -37,10 +38,14 @@ public class CategoryEntity implements Serializable {
     private UUID id;
 
     @Setter
-    @Column(name = "name", nullable = false, unique = true, length = 100)
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
 
     @Setter
     @Column(name = "color", nullable = false, length = 7)
     private String color;
+
+    @Setter
+    @Column(name = "project_id", nullable = false)
+    private UUID projectId;
 }

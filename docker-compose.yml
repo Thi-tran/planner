@@ -25,6 +25,7 @@ services:
       DB_NAME: planner
       DB_USER: planner
       DB_PASSWORD: planner
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       # Flyway runs V1__init.sql on first start; DDL is always 'validate'
       # DB_PASSWORD here is for local dev only — not a production secret
     depends_on:
