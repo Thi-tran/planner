@@ -3,18 +3,24 @@ package com.planner.security;
 import com.planner.controller.EventController;
 import com.planner.controller.CategoryController;
 import com.planner.controller.ProjectController;
+import com.planner.model.entity.UserEntity;
 import com.planner.service.EventService;
 import com.planner.service.CategoryService;
 import com.planner.service.ProjectService;
 import com.planner.service.ProjectMembershipService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,6 +49,19 @@ class AuthorizationIntegrationTest {
     private ProjectMembershipService projectMembershipService;
     @MockitoBean
     private CurrentUserService currentUserService;
+
+    @BeforeEach
+    void setUp() {
+        // Mock CurrentUserService to return a test user
+        UserEntity testUser = UserEntity.builder()
+                .id(UUID.randomUUID())
+                .googleSub("test-google-sub")
+                .email("test@example.com")
+                .displayName("Test User")
+                .build();
+        
+        when(currentUserService.resolveCurrentUser(any())).thenReturn(testUser);
+    }
 
     // ── Unauthenticated requests should be rejected with 401 ──────────────────
 

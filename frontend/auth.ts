@@ -84,7 +84,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // Expose the error flag so the client can force re-login.
       // id_token stays server-side only — NOT exposed to the browser via session.
       if (token.error) {
-        (session as Record<string, unknown>).error = token.error;
+        (session as unknown as Record<string, unknown>).error = token.error;
       }
       return session;
     },
