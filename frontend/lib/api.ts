@@ -59,7 +59,7 @@ export async function createCategory(projectId: string, data: CategoryRequest): 
 export async function updateCategory(id: string, data: CategoryRequest): Promise<Category> {
   return request<Category>(`/api/categories/${id}`, {
     method: 'PUT',
-    body: JSON.stringify({ ...data, projectId: id }), // projectId is not needed for update
+    body: JSON.stringify({ ...data, projectId: id }),
   });
 }
 
