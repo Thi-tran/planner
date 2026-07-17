@@ -19,6 +19,7 @@ export async function proxyToBackend(
   const token = await getToken({
     req,
     secret: process.env.AUTH_SECRET!,
+    secureCookie: !!process.env.VERCEL || process.env.AUTH_URL?.startsWith('https://'),
   });
 
   if (!token) {
