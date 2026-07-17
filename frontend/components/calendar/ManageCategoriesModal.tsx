@@ -163,16 +163,14 @@ export default function ManageCategoriesModal({
                 )}
               </React.Fragment>
             ))}
-
-            {showNewForm && (
-              <InlineCreateForm
-                onSave={handleCreate}
-                onCancel={() => setShowNewForm(false)}
-              />
-            )}
           </ScrollableList>
 
-          {!showNewForm && (
+          {showNewForm ? (
+            <InlineCreateForm
+              onSave={handleCreate}
+              onCancel={() => setShowNewForm(false)}
+            />
+          ) : (
             <AddButton onClick={handleNewFormStart}>
               ＋ Add a new category
             </AddButton>
