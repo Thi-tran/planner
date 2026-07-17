@@ -21,7 +21,7 @@ export default function ProjectContextProvider({ children }: { children: React.R
     }
 
     restoreContext();
-  }, []); // Run once on mount
+  }, [pathname, router]);
 
   return <>{children}</>;
 }

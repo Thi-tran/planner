@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, startTransition } from 'react';
 import styled from 'styled-components';
 import * as Dialog from '@radix-ui/react-dialog';
 import type { Category } from '../../lib/types';
@@ -33,12 +33,14 @@ export default function ManageCategoriesModal({
 
   useEffect(() => {
     if (open) {
-      setEditingId(null);
-      setShowNewForm(false);
-      setError('');
-      setDeletingId(null);
-      setShowConfirmDelete(false);
-      setCategoryToDelete(null);
+      startTransition(() => {
+        setEditingId(null);
+        setShowNewForm(false);
+        setError('');
+        setDeletingId(null);
+        setShowConfirmDelete(false);
+        setCategoryToDelete(null);
+      });
     }
   }, [open]);
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, startTransition } from 'react';
 import styled from 'styled-components';
 import { useSearchParams, useRouter } from 'next/navigation';
 import {
@@ -14,7 +14,6 @@ import {
 import type { CalendarView, CalendarEvent, Category } from '../../lib/types';
 import { useCalendarEvents } from '../../hooks/useCalendarEvents';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../../lib/api';
-import { getActiveProject } from '../../lib/projectContext';
 import Sidebar from '../layout/Sidebar';
 import CalendarHeader from './CalendarHeader';
 import DayView from './DayView';
@@ -84,7 +83,7 @@ export default function CalendarLayout() {
     if (startDateParam) {
       try {
         const startDate = new Date(startDateParam);
-        setCurrentDate(startDate);
+        startTransition(() => setCurrentDate(startDate));
       } catch {
         // Invalid date, ignore
       }

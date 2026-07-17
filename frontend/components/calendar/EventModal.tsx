@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, startTransition } from 'react';
 import styled from 'styled-components';
 import * as Dialog from '@radix-ui/react-dialog';
 import { format, addHours, parseISO } from 'date-fns';
@@ -74,12 +74,14 @@ export default function EventModal({
 
   useEffect(() => {
     if (state.open) {
-      setTitle(state.initialEvent?.title ?? '');
-      setDescription(state.initialEvent?.description ?? '');
-      setStartTime(getDefaultStart());
-      setEndTime(getDefaultEnd());
-      setCategoryId(state.initialEvent?.categoryId ?? null);
-      setError('');
+      startTransition(() => {
+        setTitle(state.initialEvent?.title ?? '');
+        setDescription(state.initialEvent?.description ?? '');
+        setStartTime(getDefaultStart());
+        setEndTime(getDefaultEnd());
+        setCategoryId(state.initialEvent?.categoryId ?? null);
+        setError('');
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.open, state.initialEvent, state.initialSlot]);
