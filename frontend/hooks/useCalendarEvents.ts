@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, startTransition } from 'react';
 import type { CalendarEvent, EventRequest } from '../lib/types';
 import * as api from '../lib/api';
 
@@ -42,7 +42,7 @@ export function useCalendarEvents({ from, to, projectId }: UseCalendarEventsOpti
   }, [fromISO, toISO, projectId]);
 
   useEffect(() => {
-    fetchEvents();
+    startTransition(() => { void fetchEvents(); });
   }, [fetchEvents]);
 
   const createEvent = useCallback(async (data: EventRequest) => {

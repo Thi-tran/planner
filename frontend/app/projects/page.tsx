@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
-import { Project } from '@/lib/types';
+import { Project, ProjectRequest } from '@/lib/types';
 import { getProjects, createProject, updateProject, deleteProject, updateProjectAccess } from '@/lib/api';
 import { setActiveProject, clearActiveProject } from '@/lib/projectContext';
 import Sidebar from '@/components/layout/Sidebar';
@@ -22,14 +22,8 @@ export default function MyProjectsPage() {
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [statusFilter, setStatusFilter] = useState<'all' | ProjectStatus>('all');
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     try {
-      setIsLoading(true);
-      setError(null);
       const data = await getProjects();
       setProjects(data);
     } catch (err: unknown) {
@@ -42,9 +36,14 @@ export default function MyProjectsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [router]);
 
-  const handleCreateProject = async (data: any) => {
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchProjects();
+  }, [fetchProjects]);
+
+  const handleCreateProject = async (data: ProjectRequest) => {
     await createProject(data);
     await fetchProjects();
   };
@@ -53,7 +52,7 @@ export default function MyProjectsPage() {
     setEditingProject(project);
   };
 
-  const handleUpdateProject = async (id: string, data: any) => {
+  const handleUpdateProject = async (id: string, data: ProjectRequest) => {
     await updateProject(id, data);
     await fetchProjects();
     setEditingProject(null);

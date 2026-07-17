@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, startTransition } from 'react';
 import styled from 'styled-components';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Project, ProjectRequest } from '@/lib/types';
@@ -36,13 +36,15 @@ export default function EditProjectModal({
   // Populate form when project changes
   useEffect(() => {
     if (project) {
-      setName(project.name);
-      setDescription(project.description || '');
-      setStartDate(project.startDate);
-      setEndDate(project.endDate || '');
-      setColor(project.color);
-      setStatus(project.status);
-      setErrors({});
+      startTransition(() => {
+        setName(project.name);
+        setDescription(project.description || '');
+        setStartDate(project.startDate);
+        setEndDate(project.endDate || '');
+        setColor(project.color);
+        setStatus(project.status);
+        setErrors({});
+      });
     }
   }, [project]);
 
@@ -91,7 +93,7 @@ export default function EditProjectModal({
         status,
       });
       handleClose();
-    } catch (error) {
+    } catch {
       setErrors({ submit: 'Failed to update project. Please try again.' });
     } finally {
       setIsSubmitting(false);
@@ -110,7 +112,7 @@ export default function EditProjectModal({
       await onDeleteProject(project.id);
       setShowDeleteConfirm(false);
       handleClose();
-    } catch (error) {
+    } catch {
       setErrors({ submit: 'Failed to delete project. Please try again.' });
       setShowDeleteConfirm(false);
     } finally {

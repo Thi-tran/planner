@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, startTransition } from 'react';
 import styled from 'styled-components';
 import { useRouter, usePathname } from 'next/navigation';
 import { Project } from '@/lib/types';
@@ -26,7 +26,7 @@ export default function Sidebar({ activeProjectId }: SidebarProps) {
   useEffect(() => {
     // Auto-expand project when on calendar page
     if (activeProjectId && pathname === '/calendar') {
-      setExpandedProjectId(activeProjectId);
+      startTransition(() => setExpandedProjectId(activeProjectId));
     }
   }, [activeProjectId, pathname]);
 
