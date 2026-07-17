@@ -50,16 +50,16 @@ export async function getCategories(projectId: string): Promise<Category[]> {
 }
 
 export async function createCategory(projectId: string, data: CategoryRequest): Promise<Category> {
-  return request<Category>(`/api/categories?projectId=${encodeURIComponent(projectId)}`, {
+  return request<Category>(`/api/categories`, {
     method: 'POST',
-    body: JSON.stringify(data),
+    body: JSON.stringify({ ...data, projectId }),
   });
 }
 
 export async function updateCategory(id: string, data: CategoryRequest): Promise<Category> {
   return request<Category>(`/api/categories/${id}`, {
     method: 'PUT',
-    body: JSON.stringify(data),
+    body: JSON.stringify({ ...data, projectId: id }), // projectId is not needed for update
   });
 }
 
