@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import styled from 'styled-components';
 import { useRouter, usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { Project } from '@/lib/types';
 import { getProjects, updateProjectAccess } from '@/lib/api';
 import { setActiveProject } from '@/lib/projectContext';
@@ -15,6 +17,7 @@ interface SidebarProps {
 export default function Sidebar({ activeProjectId }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { data: session } = useSession();
   const [recentProjects, setRecentProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedProjectId, setExpandedProjectId] = useState<string | null>(activeProjectId || null);
@@ -139,6 +142,27 @@ export default function Sidebar({ activeProjectId }: SidebarProps) {
         <LoadingIndicator>
           <Spinner />
         </LoadingIndicator>
+      )}
+
+      {session?.user && (
+        <UserSection>
+          {session.user.image ? (
+            <UserAvatar>
+              <Image
+                src={session.user.image}
+                alt={session.user.name ?? 'User avatar'}
+                width={32}
+                height={32}
+                style={{ borderRadius: '50%' }}
+              />
+            </UserAvatar>
+          ) : (
+            <UserAvatarFallback>
+              {session.user.name?.[0]?.toUpperCase() ?? '?'}
+            </UserAvatarFallback>
+          )}
+          <UserName>{session.user.name}</UserName>
+        </UserSection>
       )}
     </SidebarRoot>
   );
@@ -298,4 +322,44 @@ const Spinner = styled.div`
       transform: rotate(360deg);
     }
   }
+`;
+
+const UserSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+`;
+
+const UserAvatar = styled.div`
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+`;
+
+const UserAvatarFallback = styled.div`
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #6366f1;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const UserName = styled.span`
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
