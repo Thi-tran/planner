@@ -94,14 +94,14 @@ const Container = styled.div`
 const WeekHeader = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
 `;
 
 const WeekDayLabel = styled.div`
   text-align: center;
   padding: 8px 0;
   font-size: 12px;
-  color: #64748b;
+  color: var(--text-subtle);
   font-weight: 600;
 `;
 
@@ -112,17 +112,17 @@ const Grid = styled.div`
 `;
 
 const DayCell = styled.div<{ $outside: boolean }>`
-  border-right: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   min-height: 100px;
   padding: 4px;
-  background: ${({ $outside }) => ($outside ? '#f8fafc' : '#fff')};
+  background: ${({ $outside }) => ($outside ? 'var(--surface-subtle)' : 'var(--surface-base)')};
   cursor: pointer;
   &:nth-child(7n) {
     border-right: none;
   }
   &:hover {
-    background: #f1f5f9;
+    background: var(--surface-hover);
   }
 `;
 
@@ -141,8 +141,8 @@ const DayNum = styled.span<{ $today: boolean }>`
   border-radius: 50%;
   font-size: 13px;
   font-weight: ${({ $today }) => ($today ? '700' : '400')};
-  background: ${({ $today }) => ($today ? '#2563eb' : 'transparent')};
-  color: ${({ $today }) => ($today ? '#fff' : '#1e293b')};
+  background: ${({ $today }) => ($today ? 'var(--today-bg)' : 'transparent')};
+  color: ${({ $today }) => ($today ? '#fff' : 'var(--text-primary)')};
 `;
 
 const EventList = styled.div`
@@ -165,7 +165,7 @@ const EventChip = styled.div<{ $color: string }>`
 
 const MoreLabel = styled.div`
   font-size: 11px;
-  color: #64748b;
+  color: var(--text-subtle);
   padding: 1px 4px;
   cursor: pointer;
 `;
