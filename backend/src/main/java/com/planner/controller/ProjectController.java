@@ -2,6 +2,7 @@ package com.planner.controller;
 
 import com.planner.domain.InviteMemberRequest;
 import com.planner.domain.MembershipResponse;
+import com.planner.domain.ProjectProgressResponse;
 import com.planner.domain.ProjectRequest;
 import com.planner.domain.ProjectResponse;
 import com.planner.domain.UpdateMemberRoleRequest;
@@ -74,6 +75,12 @@ public class ProjectController {
     public ResponseEntity<ProjectResponse> updateProjectAccess(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
         UserEntity user = currentUserService.resolveCurrentUser(jwt);
         return ResponseEntity.ok(projectService.updateAccess(id, user.getId()));
+    }
+
+    @GetMapping("/{id}/progress")
+    public ResponseEntity<ProjectProgressResponse> getProjectProgress(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        UserEntity user = currentUserService.resolveCurrentUser(jwt);
+        return ResponseEntity.ok(projectService.getProgress(id, user.getId()));
     }
 
     // --- Membership endpoints ---
