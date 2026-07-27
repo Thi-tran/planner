@@ -6,5 +6,5 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  return proxyToBackend(req, `/api/projects/${id}/progress`, 'GET');
+  return proxyToBackend(req, `/api/projects/${id}/progress`);
 }
