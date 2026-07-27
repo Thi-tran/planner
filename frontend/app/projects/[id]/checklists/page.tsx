@@ -27,6 +27,45 @@ export default function ChecklistsPage({ params }: ChecklistsPageProps) {
     params.then(p => setProjectId(p.id));
   }, [params]);
 
+  useEffect(() => {
+    if (!projectId) return;
+    
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const [checklistsData, summaryData] = await Promise.all([
+          getChecklists(projectId),
+          getChecklistSummary(projectId)
+        ]);
+        
+        setChecklists(checklistsData);
+        setSummary(summaryData);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          if (err.message.includes('401')) {
+            router.replace('/signin');
+            return;
+          }
+          if (err.message.includes('403')) {
+            setError("You don't have permission to view these checklists");
+            return;
+          }
+          if (err.message.includes('404')) {
+            setError('Project not found');
+            return;
+          }
+        }
+        setError('Failed to load checklists');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [projectId, router]);
+
   const fetchData = useCallback(async () => {
     if (!projectId) return;
     
@@ -61,12 +100,6 @@ export default function ChecklistsPage({ params }: ChecklistsPageProps) {
       setLoading(false);
     }
   }, [projectId, router]);
-
-  useEffect(() => {
-    if (projectId) {
-      fetchData();
-    }
-  }, [projectId, fetchData]);
 
   if (loading) {
     return (
