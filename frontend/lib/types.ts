@@ -66,3 +66,60 @@ export interface ProjectRequest {
   color: string;
   status?: string;
 }
+
+// Checklist types
+export interface UserSummary {
+  id: string;
+  displayName: string;
+  email: string;
+  pictureUrl: string | null;
+}
+
+export interface TaskComment {
+  id: string;
+  taskId: string;
+  userId: string;
+  user: UserSummary;
+  commentText: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ChecklistTask {
+  id: string;
+  checklistId: string;
+  description: string;
+  assignedTo: string | null;
+  assignedToUser: UserSummary | null;
+  deadline: string | null;
+  status: 'todo' | 'done';
+  displayOrder: number;
+  comments: TaskComment[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Checklist {
+  id: string;
+  projectId: string;
+  name: string;
+  description: string;
+  color: string;
+  tasks: ChecklistTask[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ChecklistSummary {
+  totalChecklists: number;
+  totalTasks: number;
+  completedTasks: number;
+  overdueTasks: number;
+}
+
+export interface ProjectProgress {
+  totalTasks: number;
+  completedTasks: number;
+  percentage: number;
+  tasksLeft: number;
+}

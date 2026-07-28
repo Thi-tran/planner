@@ -1,9 +1,11 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Project } from '@/lib/types';
+import { Project, ProjectProgress } from '@/lib/types';
 import { PROJECT_COLORS } from '@/lib/constants';
 import { format } from 'date-fns';
+import { getProjectProgress } from '@/lib/api';
 
 interface ProjectCardProps {
   project: Project;
@@ -19,8 +21,15 @@ const statusColors = {
 } as const;
 
 export default function ProjectCard({ project, onClick, onEdit }: ProjectCardProps) {
+  const [progress, setProgress] = useState<ProjectProgress | null>(null);
   const colorHex = PROJECT_COLORS.find((c) => c.name === project.color)?.hex || '#5EC4CD';
   
+  useEffect(() => {
+    getProjectProgress(project.id)
+      .then(setProgress)
+      .catch(() => setProgress(null)); // Silently fail if no tasks
+  }, [project.id]);
+
   const formatDateRange = () => {
     const start = format(new Date(project.startDate), 'MMM dd, yyyy');
     if (project.endDate) {
@@ -34,6 +43,9 @@ export default function ProjectCard({ project, onClick, onEdit }: ProjectCardPro
     <Card onClick={onClick}>
       <TopBar>
         <ColorDot $color={colorHex} />
+        <StatusBadge $color={statusColors[project.status]}>
+          {project.status}
+        </StatusBadge>
         <EditButton
           onClick={(e) => {
             e.stopPropagation();
@@ -47,9 +59,18 @@ export default function ProjectCard({ project, onClick, onEdit }: ProjectCardPro
       <Title>{project.name}</Title>
       <DateRange>{formatDateRange()}</DateRange>
       {project.description && <Description>{project.description}</Description>}
-      <StatusBadge $color={statusColors[project.status]}>
-        {project.status}
-      </StatusBadge>
+      
+      {progress && progress.totalTasks > 0 && (
+        <ProgressContainer>
+          <ProgressBar>
+            <ProgressFill $percentage={progress.percentage} $color={colorHex} />
+          </ProgressBar>
+          <ProgressInfo>
+            <ProgressText>{progress.percentage}% complete</ProgressText>
+            <TasksLeft>{progress.tasksLeft} tasks left</TasksLeft>
+          </ProgressInfo>
+        </ProgressContainer>
+      )}
     </Card>
   );
 }
@@ -62,6 +83,8 @@ const Card = styled.div`
   position: relative;
   transition: box-shadow 0.2s ease;
   border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -139,4 +162,44 @@ const StatusBadge = styled.span<{ $color: string }>`
   background-color: ${(props) => props.$color}20;
   color: ${(props) => props.$color};
   text-transform: capitalize;
+  margin-left: auto;
+`;
+
+const ProgressContainer = styled.div`
+  margin-top: auto;
+  padding-top: 12px;
+`;
+
+const ProgressBar = styled.div`
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+`;
+
+const ProgressFill = styled.div<{ $percentage: number; $color: string }>`
+  height: 100%;
+  width: ${p => p.$percentage}%;
+  background: ${p => p.$color};
+  transition: width 0.3s ease;
+`;
+
+const ProgressInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ProgressText = styled.span`
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #6b7280;
+`;
+
+const TasksLeft = styled.span`
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #6b7280;
+  text-align: right;
 `;
