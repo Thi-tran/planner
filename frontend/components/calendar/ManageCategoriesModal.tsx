@@ -330,14 +330,14 @@ const Content = styled(Dialog.Content)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
+  background: var(--modal-bg);
   border-radius: 12px;
   padding: 24px;
   width: 540px;
   max-width: 95vw;
   max-height: 80vh;
   z-index: 101;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 60px var(--modal-shadow);
   display: flex;
   flex-direction: column;
 `;
@@ -353,7 +353,7 @@ const ModalTitle = styled.h2`
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
 `;
 
 const CloseButton = styled.button`
@@ -361,21 +361,21 @@ const CloseButton = styled.button`
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color: #64748b;
+  color: var(--text-subtle);
   padding: 4px;
   line-height: 1;
   &:hover {
-    color: #1e293b;
+    color: var(--text-primary);
   }
 `;
 
 const InfoBanner = styled.div`
-  background: #f0f9ff;
+  background: var(--accent-active-bg);
   border: 1px solid #bae6fd;
   border-radius: 6px;
   padding: 10px 12px;
   font-size: 13px;
-  color: #0c4a6e;
+  color: var(--accent-active-text);
   margin-bottom: 16px;
 `;
 
@@ -401,7 +401,7 @@ const ScrollableList = styled.div`
 
 const EmptyState = styled.div`
   text-align: center;
-  color: #64748b;
+  color: var(--text-subtle);
   font-size: 14px;
   padding: 32px 16px;
 `;
@@ -411,10 +411,10 @@ const CategoryRow = styled.div`
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 6px;
   &:hover {
-    background: #f8fafc;
+    background: var(--surface-subtle);
   }
 `;
 
@@ -428,7 +428,7 @@ const ColorDot = styled.span<{ $color: string }>`
 
 const CategoryName = styled.span`
   font-size: 14px;
-  color: #1e293b;
+  color: var(--text-primary);
   flex: 1;
   max-width: 200px;
   overflow: hidden;
@@ -452,7 +452,7 @@ const IconButton = styled.button`
   opacity: 0.5;
   &:hover:not(:disabled) {
     opacity: 1;
-    background: #e2e8f0;
+    background: var(--border);
   }
   &:disabled {
     opacity: 0.3;
@@ -468,7 +468,7 @@ const DeleteIconButton = styled(IconButton)`
 
 const AddButton = styled.button`
   background: none;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-strong);
   cursor: pointer;
   color: #3b82f6;
   font-size: 14px;
@@ -478,7 +478,7 @@ const AddButton = styled.button`
   width: 100%;
   text-align: center;
   &:hover {
-    background: #f0f9ff;
+    background: var(--accent-active-bg);
     border-color: #3b82f6;
   }
 `;
@@ -488,21 +488,21 @@ const MiniForm = styled.form`
   flex-direction: column;
   gap: 10px;
   padding: 12px;
-  background: #f8fafc;
+  background: var(--surface-subtle);
   border-radius: 6px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 `;
 
 const MiniInput = styled.input`
   padding: 8px 10px;
-  background: #fff;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
+  background: var(--surface-base);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
   font-size: 14px;
   outline: none;
   &::placeholder {
-    color: #64748b;
+    color: var(--text-placeholder);
   }
   &:focus {
     border-color: #3b82f6;
@@ -554,12 +554,12 @@ const MiniSaveBtn = styled.button`
 
 const MiniCancelBtn = styled.button`
   padding: 6px 14px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
-  background: #fff;
-  color: #374151;
+  background: var(--surface-base);
+  color: var(--text-secondary);
   font-size: 13px;
   cursor: pointer;
-  &:hover:not(:disabled) { background: #f8fafc; }
+  &:hover:not(:disabled) { background: var(--surface-subtle); }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 `;
