@@ -271,7 +271,7 @@ const Overlay = styled(Dialog.Overlay)`
 `;
 
 const Content = styled(Dialog.Content)`
-  background: var(--modal-bg);
+  background: white;
   border-radius: 12px;
   position: fixed;
   top: 50%;
@@ -297,7 +297,6 @@ const Title = styled.h2`
   font-size: 22px;
   font-weight: 700;
   margin: 0;
-  color: var(--text-primary);
 `;
 
 const CloseButton = styled.button`
@@ -306,7 +305,7 @@ const CloseButton = styled.button`
   font-size: 32px;
   line-height: 1;
   cursor: pointer;
-  color: var(--text-subtle);
+  color: #6b7280;
   padding: 0;
   width: 32px;
   height: 32px;
@@ -315,7 +314,7 @@ const CloseButton = styled.button`
   justify-content: center;
 
   &:hover {
-    color: var(--text-secondary);
+    color: #374151;
   }
 `;
 
@@ -335,7 +334,7 @@ const Label = styled.label`
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: #374151;
 `;
 
 const Required = styled.span`
@@ -346,11 +345,9 @@ const Input = styled.input`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   padding: 8px 12px;
-  border: 1px solid var(--border-input);
+  border: 1px solid #d1d5db;
   border-radius: 4px;
   outline: none;
-  background: var(--surface-base);
-  color: var(--text-primary);
 
   &:focus {
     border-color: #5EC4CD;
@@ -358,7 +355,7 @@ const Input = styled.input`
   }
 
   &:disabled {
-    background: var(--surface-subtle);
+    background: #f3f4f6;
     cursor: not-allowed;
   }
 `;
@@ -367,12 +364,10 @@ const Textarea = styled.textarea`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   padding: 8px 12px;
-  border: 1px solid var(--border-input);
+  border: 1px solid #d1d5db;
   border-radius: 4px;
   outline: none;
   resize: vertical;
-  background: var(--surface-base);
-  color: var(--text-primary);
 
   &:focus {
     border-color: #5EC4CD;
@@ -383,7 +378,7 @@ const Textarea = styled.textarea`
 const CharCounter = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  color: var(--text-placeholder);
+  color: #9ca3af;
   text-align: right;
 `;
 
@@ -416,15 +411,15 @@ const CancelButton = styled.button`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   padding: 10px 20px;
-  border: 1px solid var(--border-input);
+  border: 1px solid #d1d5db;
   border-radius: 4px;
-  background: var(--surface-base);
-  color: var(--text-secondary);
+  background: white;
+  color: #374151;
   cursor: pointer;
   transition: background 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: var(--surface-subtle);
+    background: #f9fafb;
   }
 
   &:disabled {

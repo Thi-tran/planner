@@ -61,12 +61,10 @@ const CategoryRow = styled.div<{ $selected: boolean }>`
   padding: 6px 8px;
   border-radius: 6px;
   cursor: pointer;
-  text: var(--text-primary);
-  background: ${({ $selected }) => ($selected ? 'var(--accent)' : 'transparent')};
+  background: ${({ $selected }) => ($selected ? '#eff6ff' : 'transparent')};
   border: 1px solid ${({ $selected }) => ($selected ? '#bfdbfe' : 'transparent')};
-
   &:hover {
-    background: ${({ $selected }) => ('var(--accent-hover)')};
+    background: ${({ $selected }) => ($selected ? '#eff6ff' : '#f8fafc')};
   }
 `;
 
@@ -80,7 +78,7 @@ const ColorDot = styled.span<{ $color: string }>`
 
 const CategoryName = styled.span`
   font-size: 13px;
-  color: var(--text-primary);
+  color: #1e293b;
   flex: 1;
 `;
 

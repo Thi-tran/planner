@@ -233,20 +233,20 @@ const Content = styled(Dialog.Content)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--modal-bg);
+  background: #fff;
   border-radius: 12px;
   padding: 24px;
   width: 460px;
   max-width: 95vw;
   z-index: 101;
-  box-shadow: 0 20px 60px var(--modal-shadow);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 `;
 
 const ModalTitle = styled.h2`
   margin: 0 0 20px;
   font-size: 18px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #1e293b;
 `;
 
 const Form = styled.form`
@@ -270,16 +270,15 @@ const Row = styled.div`
 const Label = styled.label`
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-muted);
+  color: #475569;
 `;
 
 const Input = styled.input`
   padding: 8px 10px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
   font-size: 14px;
-  color: var(--text-primary);
-  background: var(--surface-base);
+  color: #1e293b;
   outline: none;
   &:focus {
     border-color: #3b82f6;
@@ -289,11 +288,10 @@ const Input = styled.input`
 
 const Textarea = styled.textarea`
   padding: 8px 10px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
   font-size: 14px;
-  color: var(--text-primary);
-  background: var(--surface-base);
+  color: #1e293b;
   resize: vertical;
   outline: none;
   &:focus {
@@ -323,13 +321,13 @@ const RightActions = styled.div`
 
 const CancelButton = styled.button`
   padding: 8px 16px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
-  background: var(--surface-base);
+  background: #fff;
   font-size: 14px;
   cursor: pointer;
-  color: var(--text-secondary);
-  &:hover:not(:disabled) { background: var(--surface-subtle); }
+  color: #374151;
+  &:hover:not(:disabled) { background: #f8fafc; }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 `;
 

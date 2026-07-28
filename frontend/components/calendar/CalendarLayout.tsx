@@ -248,7 +248,7 @@ const LoadingOverlay = styled.div`
 const Spinner = styled.div`
   width: 24px;
   height: 24px;
-  border: 3px solid var(--border);
+  border: 3px solid #e2e8f0;
   border-top-color: #3b82f6;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
