@@ -202,8 +202,8 @@ function truncate(text: string, maxLength: number): string {
 const SidebarRoot = styled.aside<{ $collapsed: boolean }>`
   width: ${(p) => (p.$collapsed ? '56px' : '240px')};
   min-width: ${(p) => (p.$collapsed ? '56px' : '240px')};
-  background: #f8fafc;
-  border-right: 1px solid #e2e8f0;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
   display: flex;
   flex-direction: column;
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -213,7 +213,7 @@ const SidebarRoot = styled.aside<{ $collapsed: boolean }>`
 
 const LogoSection = styled.div<{ $collapsed: boolean }>`
   padding: 20px ${(p) => (p.$collapsed ? '12px' : '16px')};
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--sidebar-border);
   display: flex;
   align-items: center;
   justify-content: ${(p) => (p.$collapsed ? 'center' : 'space-between')};
@@ -225,7 +225,7 @@ const Logo = styled.h1`
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 20px;
   font-weight: 700;
-  color: #6366f1;
+  color: var(--accent);
   cursor: pointer;
   white-space: nowrap;
 
@@ -238,10 +238,10 @@ const CollapseButton = styled.button<{ $collapsed: boolean }>`
   flex-shrink: 0;
   width: 28px;
   height: 28px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 6px;
-  background: white;
-  color: #64748b;
+  background: var(--sidebar-collapse-bg);
+  color: var(--text-subtle);
   font-size: 18px;
   line-height: 1;
   cursor: pointer;
@@ -249,11 +249,11 @@ const CollapseButton = styled.button<{ $collapsed: boolean }>`
   align-items: center;
   justify-content: center;
   transition: background 0.15s, color 0.15s;
-  margin-left: 15px; 
+  margin-left: 15px;
 
   &:hover {
-    background: #f1f5f9;
-    color: #1e293b;
+    background: var(--surface-hover);
+    color: var(--text-primary);
   }
 `;
 
@@ -278,8 +278,8 @@ const NavItem = styled.button<{ $active?: boolean }>`
   gap: 12px;
   padding: 8px 16px;
   border: none;
-  background: ${(p) => (p.$active ? '#f0f9ff' : 'transparent')};
-  color: ${(p) => (p.$active ? '#0284c7' : '#475569')};
+  background: ${(p) => (p.$active ? 'var(--accent-active-bg)' : 'transparent')};
+  color: ${(p) => (p.$active ? 'var(--accent-active-text)' : 'var(--text-muted)')};
   font-size: 14px;
   font-weight: ${(p) => (p.$active ? 600 : 500)};
   cursor: pointer;
@@ -288,7 +288,7 @@ const NavItem = styled.button<{ $active?: boolean }>`
   justify-content: center;
 
   &:hover {
-    background: ${(p) => (p.$active ? '#f0f9ff' : '#f1f5f9')};
+    background: ${(p) => (p.$active ? 'var(--accent-active-bg)' : 'var(--surface-hover)')};
   }
 `;
 
@@ -309,8 +309,8 @@ const ProjectItem = styled.button<{ $active?: boolean }>`
   gap: 10px;
   padding: 8px 16px;
   border: none;
-  background: ${(p) => (p.$active ? '#f0f9ff' : 'transparent')};
-  color: ${(p) => (p.$active ? '#0284c7' : '#475569')};
+  background: ${(p) => (p.$active ? 'var(--accent-active-bg)' : 'transparent')};
+  color: ${(p) => (p.$active ? 'var(--accent-active-text)' : 'var(--text-muted)')};
   font-size: 14px;
   font-weight: ${(p) => (p.$active ? 600 : 500)};
   cursor: pointer;
@@ -318,7 +318,7 @@ const ProjectItem = styled.button<{ $active?: boolean }>`
   text-align: left;
 
   &:hover {
-    background: ${(p) => (p.$active ? '#f0f9ff' : '#f1f5f9')};
+    background: ${(p) => (p.$active ? 'var(--accent-active-bg)' : 'var(--surface-hover)')};
   }
 `;
 
@@ -359,7 +359,7 @@ const ExpandIcon = styled.span<{ $expanded: boolean }>`
   line-height: 1;
   transform: ${(p) => (p.$expanded ? 'rotate(90deg)' : 'rotate(0deg)')};
   transition: transform 0.2s ease;
-  color: #94a3b8;
+  color: var(--text-faint);
 `;
 
 const SubMenuItem = styled.button<{ $active?: boolean }>`
@@ -369,8 +369,8 @@ const SubMenuItem = styled.button<{ $active?: boolean }>`
   gap: 12px;
   padding: 8px 16px 8px 32px;
   border: none;
-  background: ${(p) => (p.$active ? '#f0f9ff' : 'transparent')};
-  color: ${(p) => (p.$active ? '#0284c7' : '#475569')};
+  background: ${(p) => (p.$active ? 'var(--accent-active-bg)' : 'transparent')};
+  color: ${(p) => (p.$active ? 'var(--accent-active-text)' : 'var(--text-muted)')};
   font-size: 14px;
   font-weight: ${(p) => (p.$active ? 600 : 500)};
   cursor: pointer;
@@ -378,7 +378,7 @@ const SubMenuItem = styled.button<{ $active?: boolean }>`
   text-align: left;
 
   &:hover {
-    background: ${(p) => (p.$active ? '#f0f9ff' : '#f1f5f9')};
+    background: ${(p) => (p.$active ? 'var(--accent-active-bg)' : 'var(--surface-hover)')};
   }
 `;
 
@@ -391,8 +391,8 @@ const LoadingIndicator = styled.div`
 const Spinner = styled.div`
   width: 16px;
   height: 16px;
-  border: 2px solid #e2e8f0;
-  border-top-color: #6366f1;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
   @keyframes spin {
@@ -407,8 +407,8 @@ const UserSection = styled.div<{ $collapsed: boolean }>`
   align-items: center;
   gap: 10px;
   padding: 12px ${(p) => (p.$collapsed ? '12px' : '16px')};
-  border-top: 1px solid #e2e8f0;
-  background: #f8fafc;
+  border-top: 1px solid var(--sidebar-border);
+  background: var(--sidebar-bg);
   justify-content: ${(p) => (p.$collapsed ? 'center' : 'flex-start')};
 `;
 
@@ -425,7 +425,7 @@ const UserAvatarFallback = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #6366f1;
+  background: var(--accent);
   color: white;
   font-size: 13px;
   font-weight: 600;
@@ -437,7 +437,7 @@ const UserAvatarFallback = styled.div`
 const UserName = styled.span`
   font-size: 13px;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
