@@ -16,7 +16,7 @@ export default function CreateProjectCard({ onClick }: CreateProjectCardProps) {
 }
 
 const Card = styled.div`
-  background: var(--surface-subtle);
+  background: #f8fafc;
   border: 2px dashed #cbd5e1;
   border-radius: 8px;
   padding: 16px;
@@ -29,7 +29,7 @@ const Card = styled.div`
   transition: background 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    background: var(--surface-hover);
+    background: #f1f5f9;
     border-color: #94a3b8;
   }
 `;

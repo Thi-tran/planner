@@ -76,13 +76,13 @@ export default function ProjectCard({ project, onClick, onEdit }: ProjectCardPro
 }
 
 const Card = styled.div`
-  background: var(--surface-base);
+  background: white;
   border-radius: 8px;
   padding: 16px;
   cursor: pointer;
   position: relative;
   transition: box-shadow 0.2s ease;
-  border: 1px solid var(--border);
+  border: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
 
@@ -137,14 +137,14 @@ const Title = styled.h3`
 const DateRange = styled.div`
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  color: var(--text-subtle);
+  color: #6b7280;
   margin-bottom: 8px;
 `;
 
 const Description = styled.p`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  color: var(--text-secondary);
+  color: #374151;
   margin: 0 0 12px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;

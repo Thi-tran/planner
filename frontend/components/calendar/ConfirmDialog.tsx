@@ -73,26 +73,26 @@ const Content = styled(AlertDialog.Content)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--modal-bg);
+  background: #fff;
   border-radius: 8px;
   padding: 24px;
   width: 400px;
   max-width: 90vw;
   z-index: 103;
-  box-shadow: 0 20px 60px var(--modal-shadow);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
 `;
 
 const Title = styled.h2`
   margin: 0 0 12px;
   font-size: 16px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #1e293b;
 `;
 
 const Description = styled.p`
   margin: 0 0 20px;
   font-size: 14px;
-  color: var(--text-subtle);
+  color: #64748b;
   line-height: 1.5;
 `;
 
@@ -104,14 +104,14 @@ const Actions = styled.div`
 
 const CancelButton = styled.button`
   padding: 8px 16px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
-  background: var(--surface-base);
+  background: #fff;
   font-size: 14px;
   cursor: pointer;
-  color: var(--text-secondary);
+  color: #374151;
   &:hover:not(:disabled) {
-    background: var(--surface-subtle);
+    background: #f8fafc;
   }
   &:disabled {
     opacity: 0.5;

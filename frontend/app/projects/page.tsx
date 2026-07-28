@@ -211,7 +211,6 @@ const Container = styled.div`
   margin: 0 auto;
   padding: 24px;
   overflow-y: auto;
-  background: var(--background);
 `;
 
 const Header = styled.div`
@@ -226,7 +225,6 @@ const Title = styled.h1`
   font-size: 22px;
   font-weight: 700;
   margin: 0;
-  color: var(--text-primary);
 `;
 
 const FilterContainer = styled.div`
@@ -238,18 +236,17 @@ const FilterContainer = styled.div`
 const FilterLabel = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  color: var(--text-subtle);
+  color: #6b7280;
 `;
 
 const FilterSelect = styled.select`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   padding: 8px 32px 8px 12px;
-  border: 1px solid var(--border-input);
+  border: 1px solid #d1d5db;
   border-radius: 4px;
   outline: none;
-  background: var(--surface-base);
-  color: var(--text-primary);
+  background: white;
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
@@ -270,24 +267,23 @@ const MetricsRow = styled.div`
 `;
 
 const MetricCard = styled.div`
-  background: var(--surface-subtle);
+  background: #f8fafc;
   border-radius: 8px;
   padding: 16px;
   text-align: center;
-  border: 1px solid var(--border);
 `;
 
 const MetricValue = styled.div`
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 32px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #1f2937;
 `;
 
 const MetricLabel = styled.div`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  color: var(--text-subtle);
+  color: #6b7280;
   margin-top: 4px;
 `;
 
