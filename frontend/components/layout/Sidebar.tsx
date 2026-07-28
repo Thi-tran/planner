@@ -125,13 +125,22 @@ export default function Sidebar({ activeProjectId }: SidebarProps) {
                   </ProjectItem>
 
                   {isExpanded && (
-                    <SubMenuItem
-                      $active={isPlanningActive}
-                      onClick={() => handlePlanningClick(project)}
-                    >
-                      <NavIcon>📅</NavIcon>
-                      <NavLabel>Planning</NavLabel>
-                    </SubMenuItem>
+                    <>
+                      <SubMenuItem
+                        $active={isPlanningActive}
+                        onClick={() => handlePlanningClick(project)}
+                      >
+                        <NavIcon>📅</NavIcon>
+                        <NavLabel>Planning</NavLabel>
+                      </SubMenuItem>
+                      <SubMenuItem
+                        $active={pathname.includes(`/projects/${project.id}/checklists`)}
+                        onClick={() => router.push(`/projects/${project.id}/checklists`)}
+                      >
+                        <NavIcon>✓</NavIcon>
+                        <NavLabel>Checklists</NavLabel>
+                      </SubMenuItem>
+                    </>
                   )}
                 </div>
               );

@@ -1,4 +1,4 @@
-import type { CalendarEvent, EventRequest, Category, CategoryRequest, Project, ProjectRequest, MembershipResponse, Role } from './types';
+import type { CalendarEvent, EventRequest, Category, CategoryRequest, Project, ProjectRequest, MembershipResponse, Role, Checklist, ChecklistSummary, ProjectProgress } from './types';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(path, {
@@ -97,6 +97,10 @@ export async function updateProjectAccess(id: string): Promise<Project> {
   return request<Project>(`/api/projects/${id}/access`, { method: 'PATCH' });
 }
 
+export async function getProjectProgress(id: string): Promise<ProjectProgress> {
+  return request<ProjectProgress>(`/api/projects/${id}/progress`);
+}
+
 export async function getMembers(projectId: string): Promise<MembershipResponse[]> {
   return request<MembershipResponse[]>(`/api/projects/${projectId}/members`);
 }
@@ -117,4 +121,18 @@ export async function updateMemberRole(projectId: string, membershipId: string, 
 
 export async function removeMember(projectId: string, membershipId: string): Promise<void> {
   return request<void>(`/api/projects/${projectId}/members/${membershipId}`, { method: 'DELETE' });
+}
+
+
+// Checklist API functions
+export async function getChecklists(projectId: string): Promise<Checklist[]> {
+  return request<Checklist[]>(`/api/projects/${projectId}/checklists`);
+}
+
+export async function getChecklist(checklistId: string): Promise<Checklist> {
+  return request<Checklist>(`/api/checklists/${checklistId}`);
+}
+
+export async function getChecklistSummary(projectId: string): Promise<ChecklistSummary> {
+  return request<ChecklistSummary>(`/api/projects/${projectId}/checklists/summary`);
 }

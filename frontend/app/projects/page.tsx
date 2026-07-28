@@ -293,25 +293,11 @@ const MetricLabel = styled.div`
 
 const ProjectsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 
-  @media (min-width: 1024px) {
-    > * {
-      grid-column: span 4;
-    }
-  }
-
-  @media (min-width: 768px) and (max-width: 1023px) {
-    > * {
-      grid-column: span 6;
-    }
-  }
-
   @media (max-width: 767px) {
-    > * {
-      grid-column: span 12;
-    }
+    grid-template-columns: 1fr;
   }
 `;
 

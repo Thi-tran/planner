@@ -1,5 +1,6 @@
 package com.planner.service;
 
+import com.planner.domain.ProjectProgressResponse;
 import com.planner.domain.ProjectRequest;
 import com.planner.domain.ProjectResponse;
 import com.planner.exception.ResourceNotFoundException;
@@ -8,6 +9,8 @@ import com.planner.model.entity.MembershipStatus;
 import com.planner.model.entity.ProjectEntity;
 import com.planner.model.entity.ProjectMembershipEntity;
 import com.planner.model.entity.Role;
+import com.planner.model.entity.TaskStatus;
+import com.planner.model.repository.ChecklistTaskRepository;
 import com.planner.model.repository.ProjectMembershipRepository;
 import com.planner.model.repository.ProjectRepository;
 import com.planner.security.ProjectAccessService;
@@ -30,6 +33,7 @@ public class ProjectService {
     private final ProjectMapper projectMapper;
     private final ProjectMembershipRepository membershipRepository;
     private final ProjectAccessService projectAccessService;
+    private final ChecklistTaskRepository checklistTaskRepository;
 
     @Transactional(readOnly = true)
     public List<ProjectResponse> listAll(UUID userId) {
@@ -107,5 +111,23 @@ public class ProjectService {
                 .map(ProjectMembershipEntity::getRole)
                 .orElse(null);
         return projectMapper.toResponse(projectRepository.save(project), role);
+    }
+
+    @Transactional(readOnly = true)
+    public ProjectProgressResponse getProgress(UUID id, UUID userId) {
+        projectAccessService.requireRole(id, userId, Role.VIEWER);
+        
+        long totalTasks = checklistTaskRepository.countByProjectId(id);
+        long completedTasks = checklistTaskRepository.countByProjectIdAndStatusIn(id, List.of(TaskStatus.DONE));
+        
+        int percentage = totalTasks > 0 ? (int) Math.round((completedTasks * 100.0) / totalTasks) : 0;
+        int tasksLeft = (int) (totalTasks - completedTasks);
+        
+        return new ProjectProgressResponse(
+                (int) totalTasks,
+                (int) completedTasks,
+                percentage,
+                tasksLeft
+        );
     }
 }

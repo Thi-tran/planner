@@ -65,7 +65,7 @@ export default function CreateProjectModal({ open, onClose, onCreateProject }: C
         color,
       });
       handleClose();
-    } catch (_) {
+    } catch {
       setErrors({ submit: 'Failed to create project. Please try again.' });
     } finally {
       setIsSubmitting(false);
