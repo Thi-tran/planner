@@ -1,20 +1,44 @@
+import { useState } from 'react';
 import styled from 'styled-components';
-import { Checklist } from '@/lib/types';
+import { Checklist, TaskRequest } from '@/lib/types';
 import TaskRow from './TaskRow';
+import AddTaskModal from './AddTaskModal';
 import { PROJECT_COLORS } from '@/lib/constants';
 
 interface ChecklistCardProps {
   checklist: Checklist;
   expanded: boolean;
   onToggle: () => void;
+  onTaskAdded: () => void;
 }
 
-export default function ChecklistCard({ checklist, expanded, onToggle }: ChecklistCardProps) {
+export default function ChecklistCard({ checklist, expanded, onToggle, onTaskAdded }: ChecklistCardProps) {
+  const [showAddTaskModal, setShowAddTaskModal] = useState(false);
   const completedCount = checklist.tasks.filter(t => t.status === 'done').length;
   const totalTasks = checklist.tasks.length;
   const percentage = totalTasks > 0 ? Math.round((completedCount / totalTasks) * 100) : 0;
   
   const colorHex = PROJECT_COLORS.find(c => c.name === checklist.color)?.hex || '#5EC4CD';
+
+  const handleAddTask = async (data: TaskRequest) => {
+    const response = await fetch(`/api/checklists/${checklist.id}/tasks`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add task');
+    }
+
+    onTaskAdded();
+  };
+
+  const handleAddTaskClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowAddTaskModal(true);
+  };
 
   return (
     <Card $borderColor={colorHex} onClick={onToggle}>
@@ -40,15 +64,32 @@ export default function ChecklistCard({ checklist, expanded, onToggle }: Checkli
         </ProgressBar>
       </ProgressSection>
 
-      {expanded && checklist.tasks.length > 0 && (
-        <TaskList>
-          {checklist.tasks
-            .sort((a, b) => a.displayOrder - b.displayOrder)
-            .map(task => (
-              <TaskRow key={task.id} task={task} checklistColor={colorHex} />
-            ))}
-        </TaskList>
+      {expanded && (
+        <>
+          {checklist.tasks.length > 0 && (
+            <TaskList>
+              {checklist.tasks
+                .sort((a, b) => a.displayOrder - b.displayOrder)
+                .map(task => (
+                  <TaskRow key={task.id} task={task} checklistColor={colorHex} />
+                ))}
+            </TaskList>
+          )}
+          <AddTaskButton onClick={handleAddTaskClick}>
+            + Add task
+          </AddTaskButton>
+        </>
       )}
+
+      <AddTaskModal
+        checklistId={checklist.id}
+        checklistName={checklist.name}
+        checklistColor={colorHex}
+        projectId={checklist.projectId}
+        open={showAddTaskModal}
+        onClose={() => setShowAddTaskModal(false)}
+        onAddTask={handleAddTask}
+      />
     </Card>
   );
 }
@@ -152,4 +193,24 @@ const TaskList = styled.div`
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid #e2e8f0;
+`;
+
+const AddTaskButton = styled.button`
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #5EC4CD;
+  background: none;
+  border: 1px dashed #cbd5e1;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+
+  &:hover {
+    background: #f0f9fa;
+    border-color: #5EC4CD;
+  }
 `;

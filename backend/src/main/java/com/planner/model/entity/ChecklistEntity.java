@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -36,6 +37,9 @@ public class ChecklistEntity {
     
     @Column(nullable = false, length = 50)
     private String color;
+    
+    @Column(name = "due_date")
+    private LocalDate dueDate;
     
     @OneToMany(mappedBy = "checklist", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

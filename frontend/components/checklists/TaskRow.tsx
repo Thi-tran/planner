@@ -34,7 +34,7 @@ export default function TaskRow({ task, checklistColor }: TaskRowProps) {
       </Checkbox>
       <TaskContent>
         <TaskDescription $isDone={task.status === 'done'}>
-          {task.description}
+          {task.title}
         </TaskDescription>
         <TaskMeta>
           {task.assignedToUser ? (

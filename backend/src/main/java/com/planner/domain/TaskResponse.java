@@ -8,10 +8,12 @@ import java.util.UUID;
 public record TaskResponse(
         UUID id,
         UUID checklistId,
-        String description,
+        String title,
+        String details,
         UUID assignedTo,
         UserSummary assignedToUser,
         LocalDate deadline,
+        String priority,
         String status,
         Integer displayOrder,
         List<TaskCommentResponse> comments,

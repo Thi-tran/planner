@@ -1,10 +1,14 @@
 package com.planner.controller;
 
+import com.planner.domain.ChecklistRequest;
 import com.planner.domain.ChecklistResponse;
 import com.planner.domain.ChecklistSummaryResponse;
+import com.planner.domain.TaskRequest;
+import com.planner.domain.TaskResponse;
 import com.planner.model.entity.UserEntity;
 import com.planner.security.CurrentUserService;
 import com.planner.service.ChecklistService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -45,5 +49,25 @@ public class ChecklistController {
             @AuthenticationPrincipal Jwt jwt) {
         UserEntity user = currentUserService.resolveCurrentUser(jwt);
         return ResponseEntity.ok(checklistService.getSummary(projectId, user.getId()));
+    }
+    
+    @PostMapping("/projects/{projectId}/checklists")
+    public ResponseEntity<ChecklistResponse> createChecklist(
+            @PathVariable UUID projectId,
+            @Valid @RequestBody ChecklistRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+        UserEntity user = currentUserService.resolveCurrentUser(jwt);
+        ChecklistResponse response = checklistService.create(projectId, request, user.getId());
+        return ResponseEntity.status(201).body(response);
+    }
+    
+    @PostMapping("/checklists/{checklistId}/tasks")
+    public ResponseEntity<TaskResponse> addTask(
+            @PathVariable UUID checklistId,
+            @Valid @RequestBody TaskRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+        UserEntity user = currentUserService.resolveCurrentUser(jwt);
+        TaskResponse task = checklistService.addTask(checklistId, request, user.getId());
+        return ResponseEntity.status(201).body(task);
     }
 }

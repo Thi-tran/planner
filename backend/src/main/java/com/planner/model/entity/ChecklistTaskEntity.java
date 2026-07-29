@@ -29,8 +29,11 @@ public class ChecklistTaskEntity {
     @JoinColumn(name = "checklist_id", nullable = false)
     private ChecklistEntity checklist;
     
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String description;
+    @Column(nullable = false, length = 500)
+    private String title;
+    
+    @Column(columnDefinition = "TEXT")
+    private String details;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assigned_to")
@@ -38,6 +41,9 @@ public class ChecklistTaskEntity {
     
     @Column(name = "deadline")
     private LocalDate deadline;
+    
+    @Column(length = 20)
+    private String priority;
     
     @Column(nullable = false, length = 20)
     private TaskStatus status;
@@ -61,6 +67,7 @@ public class ChecklistTaskEntity {
         updatedAt = Instant.now();
         if (status == null) status = TaskStatus.TODO;
         if (displayOrder == null) displayOrder = 0;
+        if (priority == null) priority = "medium";
     }
     
     @PreUpdate
