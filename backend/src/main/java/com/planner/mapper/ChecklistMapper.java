@@ -21,6 +21,7 @@ public class ChecklistMapper {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getColor(),
+                entity.getDueDate(),
                 entity.getTasks() != null 
                     ? entity.getTasks().stream()
                         .map(this::toTaskResponse)
@@ -39,10 +40,12 @@ public class ChecklistMapper {
         return new TaskResponse(
                 entity.getId(),
                 entity.getChecklist().getId(),
-                entity.getDescription(),
+                entity.getTitle(),
+                entity.getDetails(),
                 entity.getAssignedToUser() != null ? entity.getAssignedToUser().getId() : null,
                 assignedToUser,
                 entity.getDeadline(),
+                entity.getPriority(),
                 entity.getStatus().name().toLowerCase().replace('_', '-'),
                 entity.getDisplayOrder(),
                 entity.getComments() != null

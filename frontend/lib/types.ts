@@ -88,10 +88,12 @@ export interface TaskComment {
 export interface ChecklistTask {
   id: string;
   checklistId: string;
-  description: string;
+  title: string;
+  details: string | null;
   assignedTo: string | null;
   assignedToUser: UserSummary | null;
   deadline: string | null;
+  priority: 'low' | 'medium' | 'high';
   status: 'todo' | 'done';
   displayOrder: number;
   comments: TaskComment[];
@@ -105,9 +107,25 @@ export interface Checklist {
   name: string;
   description: string;
   color: string;
+  dueDate: string | null;
   tasks: ChecklistTask[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ChecklistRequest {
+  name: string;
+  description?: string;
+  color: string;
+  dueDate?: string; // ISO date (YYYY-MM-DD)
+}
+
+export interface TaskRequest {
+  title: string;
+  details?: string;
+  assignedTo?: string; // UUID
+  deadline?: string; // ISO date (YYYY-MM-DD)
+  priority?: 'low' | 'medium' | 'high';
 }
 
 export interface ChecklistSummary {

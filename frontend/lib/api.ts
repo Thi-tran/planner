@@ -1,4 +1,4 @@
-import type { CalendarEvent, EventRequest, Category, CategoryRequest, Project, ProjectRequest, MembershipResponse, Role, Checklist, ChecklistSummary, ProjectProgress } from './types';
+import type { CalendarEvent, EventRequest, Category, CategoryRequest, Project, ProjectRequest, MembershipResponse, Role, Checklist, ChecklistSummary, ProjectProgress, ChecklistRequest, TaskRequest, ChecklistTask } from './types';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(path, {
@@ -135,4 +135,18 @@ export async function getChecklist(checklistId: string): Promise<Checklist> {
 
 export async function getChecklistSummary(projectId: string): Promise<ChecklistSummary> {
   return request<ChecklistSummary>(`/api/projects/${projectId}/checklists/summary`);
+}
+
+export async function createChecklist(projectId: string, data: ChecklistRequest): Promise<Checklist> {
+  return request<Checklist>(`/api/projects/${projectId}/checklists`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function addTask(checklistId: string, data: TaskRequest): Promise<ChecklistTask> {
+  return request<ChecklistTask>(`/api/checklists/${checklistId}/tasks`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
 }

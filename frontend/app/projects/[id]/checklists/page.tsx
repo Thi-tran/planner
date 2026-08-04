@@ -3,12 +3,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
-import { Checklist, ChecklistSummary } from '@/lib/types';
+import { Checklist, ChecklistSummary, ChecklistRequest } from '@/lib/types';
 import { getChecklists, getChecklistSummary } from '@/lib/api';
 import Sidebar from '@/components/layout/Sidebar';
 import SummaryMetrics from '@/components/checklists/SummaryMetrics';
 import ChecklistCard from '@/components/checklists/ChecklistCard';
 import EmptyState from '@/components/checklists/EmptyState';
+import CreateChecklistModal from '@/components/checklists/CreateChecklistModal';
 
 interface ChecklistsPageProps {
   params: Promise<{ id: string }>;
@@ -22,6 +23,7 @@ export default function ChecklistsPage({ params }: ChecklistsPageProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedChecklistId, setExpandedChecklistId] = useState<string | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     params.then(p => setProjectId(p.id));
@@ -101,6 +103,23 @@ export default function ChecklistsPage({ params }: ChecklistsPageProps) {
     }
   }, [projectId, router]);
 
+  const handleCreateChecklist = async (data: ChecklistRequest) => {
+    if (!projectId) return;
+
+    const response = await fetch(`/api/projects/${projectId}/checklists`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create checklist');
+    }
+
+    await fetchData();
+  };
+
   if (loading) {
     return (
       <LayoutContainer>
@@ -132,6 +151,9 @@ export default function ChecklistsPage({ params }: ChecklistsPageProps) {
       <Container>
         <Header>
           <Title>Checklists</Title>
+          <CreateButton onClick={() => setShowCreateModal(true)}>
+            + Create checklist
+          </CreateButton>
         </Header>
 
         {summary && <SummaryMetrics summary={summary} />}
@@ -148,10 +170,18 @@ export default function ChecklistsPage({ params }: ChecklistsPageProps) {
                 onToggle={() => setExpandedChecklistId(
                   expandedChecklistId === checklist.id ? null : checklist.id
                 )}
+                onTaskAdded={fetchData}
               />
             ))}
           </ChecklistsGrid>
         )}
+
+        <CreateChecklistModal
+          projectId={projectId || ''}
+          open={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onCreateChecklist={handleCreateChecklist}
+        />
       </Container>
     </LayoutContainer>
   );
@@ -228,5 +258,22 @@ const RetryButton = styled.button`
 
   &:hover {
     background: #fef2f2;
+  }
+`;
+
+const CreateButton = styled.button`
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background: #5EC4CD;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #4da9b8;
   }
 `;

@@ -44,4 +44,10 @@ public interface ChecklistRepository extends JpaRepository<ChecklistEntity, UUID
      * Count total checklists for a project.
      */
     long countByProjectId(UUID projectId);
+    
+    /**
+     * Fetch checklist with project for authorization checks.
+     */
+    @Query("SELECT c FROM ChecklistEntity c JOIN FETCH c.project WHERE c.id = :id")
+    Optional<ChecklistEntity> findByIdWithProject(@Param("id") UUID id);
 }
