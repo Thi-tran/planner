@@ -5,6 +5,7 @@ import com.planner.domain.ChecklistResponse;
 import com.planner.domain.ChecklistSummaryResponse;
 import com.planner.domain.TaskRequest;
 import com.planner.domain.TaskResponse;
+import com.planner.domain.UpdateTaskStatusRequest;
 import com.planner.model.entity.UserEntity;
 import com.planner.security.CurrentUserService;
 import com.planner.service.ChecklistService;
@@ -69,5 +70,15 @@ public class ChecklistController {
         UserEntity user = currentUserService.resolveCurrentUser(jwt);
         TaskResponse task = checklistService.addTask(checklistId, request, user.getId());
         return ResponseEntity.status(201).body(task);
+    }
+    
+    @PatchMapping("/checklists/tasks/{taskId}/status")
+    public ResponseEntity<TaskResponse> updateTaskStatus(
+            @PathVariable UUID taskId,
+            @Valid @RequestBody UpdateTaskStatusRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+        UserEntity user = currentUserService.resolveCurrentUser(jwt);
+        TaskResponse task = checklistService.updateTaskStatus(taskId, request.getStatus(), user.getId());
+        return ResponseEntity.ok(task);
     }
 }

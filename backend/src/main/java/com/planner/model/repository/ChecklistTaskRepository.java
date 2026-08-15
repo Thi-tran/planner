@@ -44,4 +44,10 @@ public interface ChecklistTaskRepository extends JpaRepository<ChecklistTaskEnti
      */
     @Query("SELECT t FROM ChecklistTaskEntity t LEFT JOIN FETCH t.assignedToUser WHERE t.id = :id")
     Optional<ChecklistTaskEntity> findByIdWithAssignee(@Param("id") UUID id);
+    
+    /**
+     * Find task with checklist for status update and access validation.
+     */
+    @Query("SELECT t FROM ChecklistTaskEntity t JOIN FETCH t.checklist c JOIN FETCH c.project WHERE t.id = :id")
+    Optional<ChecklistTaskEntity> findByIdWithChecklist(@Param("id") UUID id);
 }
