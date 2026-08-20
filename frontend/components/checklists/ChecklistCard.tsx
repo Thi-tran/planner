@@ -71,7 +71,12 @@ export default function ChecklistCard({ checklist, expanded, onToggle, onTaskAdd
               {checklist.tasks
                 .sort((a, b) => a.displayOrder - b.displayOrder)
                 .map(task => (
-                  <TaskRow key={task.id} task={task} checklistColor={colorHex} />
+                  <TaskRow 
+                    key={task.id} 
+                    task={task} 
+                    checklistColor={colorHex}
+                    onStatusChange={onTaskAdded}
+                  />
                 ))}
             </TaskList>
           )}

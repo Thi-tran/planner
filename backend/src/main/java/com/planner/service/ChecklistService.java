@@ -140,4 +140,28 @@ public class ChecklistService {
         
         return checklistMapper.toTaskResponse(saved);
     }
+    
+    @Transactional
+    public TaskResponse updateTaskStatus(UUID taskId, String statusString, UUID userId) {
+        // Load task with checklist and project
+        ChecklistTaskEntity task = checklistTaskRepository.findByIdWithChecklist(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + taskId));
+        
+        // Validate project access
+        UUID projectId = task.getChecklist().getProject().getId();
+        projectAccessService.requireRole(projectId, userId, Role.VIEWER);
+        
+        // Convert status string to enum
+        TaskStatus newStatus = TaskStatus.fromDbValue(statusString);
+        
+        // Update status
+        task.setStatus(newStatus);
+        ChecklistTaskEntity saved = checklistTaskRepository.save(task);
+        
+        // Reload with assignee for proper mapping
+        saved = checklistTaskRepository.findByIdWithAssignee(saved.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found after update"));
+        
+        return checklistMapper.toTaskResponse(saved);
+    }
 }

@@ -1,12 +1,17 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { ChecklistTask } from '@/lib/types';
+import { updateTaskStatus } from '@/lib/api';
 
 interface TaskRowProps {
   task: ChecklistTask;
   checklistColor: string;
+  onStatusChange: () => void;
 }
 
-export default function TaskRow({ task, checklistColor }: TaskRowProps) {
+export default function TaskRow({ task, checklistColor, onStatusChange }: TaskRowProps) {
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const getDeadlineColor = () => {
     if (!task.deadline || task.status === 'done') return '#94A3B8';
     
@@ -27,9 +32,37 @@ export default function TaskRow({ task, checklistColor }: TaskRowProps) {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
+  const handleCheckboxClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (isUpdating) return;
+    
+    setIsUpdating(true);
+    setError(null);
+    
+    const newStatus = task.status === 'done' ? 'todo' : 'done';
+    
+    try {
+      await updateTaskStatus(task.id, newStatus);
+      onStatusChange();
+    } catch (err) {
+      setError('Failed to update task status');
+      console.error('Error updating task status:', err);
+      // Auto-dismiss error after 3 seconds
+      setTimeout(() => setError(null), 3000);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   return (
     <Row>
-      <Checkbox $checked={task.status === 'done'} $color={checklistColor}>
+      <Checkbox 
+        $checked={task.status === 'done'} 
+        $color={checklistColor}
+        $disabled={isUpdating}
+        onClick={handleCheckboxClick}
+      >
         {task.status === 'done' && <Checkmark>✓</Checkmark>}
       </Checkbox>
       <TaskContent>
@@ -51,6 +84,7 @@ export default function TaskRow({ task, checklistColor }: TaskRowProps) {
             <CommentCount>💬 {task.comments.length}</CommentCount>
           )}
         </TaskMeta>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
       </TaskContent>
     </Row>
   );
@@ -69,7 +103,7 @@ const Row = styled.div`
   }
 `;
 
-const Checkbox = styled.div<{ $checked: boolean; $color: string }>`
+const Checkbox = styled.div<{ $checked: boolean; $color: string; $disabled: boolean }>`
   width: 20px;
   height: 20px;
   border-radius: 4px;
@@ -77,9 +111,10 @@ const Checkbox = styled.div<{ $checked: boolean; $color: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  cursor: ${p => p.$disabled ? 'not-allowed' : 'pointer'};
   transition: all 0.2s;
   margin-top: 2px;
+  opacity: ${p => p.$disabled ? 0.5 : 1};
   
   ${p => p.$checked ? `
     background: ${p.$color};
@@ -89,7 +124,7 @@ const Checkbox = styled.div<{ $checked: boolean; $color: string }>`
     border: 2px solid ${p.$color};
     
     &:hover {
-      background: ${p.$color}10;
+      background: ${p.$disabled ? 'white' : `${p.$color}10`};
     }
   `}
 `;
@@ -142,4 +177,11 @@ const CommentCount = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
   color: #6b7280;
+`;
+
+const ErrorMessage = styled.div`
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 4px;
 `;

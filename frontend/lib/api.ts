@@ -150,3 +150,10 @@ export async function addTask(checklistId: string, data: TaskRequest): Promise<C
     body: JSON.stringify(data),
   });
 }
+
+export async function updateTaskStatus(taskId: string, status: string): Promise<ChecklistTask> {
+  return request<ChecklistTask>(`/api/checklists/tasks/${taskId}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  });
+}
