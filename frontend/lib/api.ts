@@ -1,4 +1,4 @@
-import type { CalendarEvent, EventRequest, Category, CategoryRequest, Project, ProjectRequest, MembershipResponse, Role, Checklist, ChecklistSummary, ProjectProgress, ChecklistRequest, TaskRequest, ChecklistTask } from './types';
+import type { CalendarEvent, EventRequest, Category, CategoryRequest, Project, ProjectRequest, MembershipResponse, Role, Checklist, ChecklistSummary, ProjectProgress, ChecklistRequest, TaskRequest, ChecklistTask, TaskComment } from './types';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(path, {
@@ -155,5 +155,27 @@ export async function updateTaskStatus(taskId: string, status: string): Promise<
   return request<ChecklistTask>(`/api/checklists/tasks/${taskId}/status`, {
     method: 'PATCH',
     body: JSON.stringify({ status }),
+  });
+}
+
+export async function getTask(taskId: string): Promise<ChecklistTask> {
+  return request<ChecklistTask>(`/api/tasks/${taskId}`);
+}
+
+export async function updateTask(taskId: string, data: Partial<TaskRequest> & { status?: string }): Promise<ChecklistTask> {
+  return request<ChecklistTask>(`/api/tasks/${taskId}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteTask(taskId: string): Promise<void> {
+  return request<void>(`/api/tasks/${taskId}`, { method: 'DELETE' });
+}
+
+export async function addComment(taskId: string, commentText: string): Promise<TaskComment> {
+  return request<TaskComment>(`/api/tasks/${taskId}/comments`, {
+    method: 'POST',
+    body: JSON.stringify({ commentText }),
   });
 }

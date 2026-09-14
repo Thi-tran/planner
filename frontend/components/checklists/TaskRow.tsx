@@ -7,11 +7,14 @@ interface TaskRowProps {
   task: ChecklistTask;
   checklistColor: string;
   onStatusChange: () => void;
+  onTaskClick: (taskId: string) => void;
+  isSelected?: boolean;
 }
 
-export default function TaskRow({ task, checklistColor, onStatusChange }: TaskRowProps) {
+export default function TaskRow({ task, checklistColor, onStatusChange, onTaskClick, isSelected = false }: TaskRowProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isHovering, setIsHovering] = useState(false);
   const getDeadlineColor = () => {
     if (!task.deadline || task.status === 'done') return '#94A3B8';
     
@@ -55,20 +58,41 @@ export default function TaskRow({ task, checklistColor, onStatusChange }: TaskRo
     }
   };
 
+  const handleRowClick = (e: React.MouseEvent) => {
+    // Don't open panel if clicking checkbox
+    if ((e.target as HTMLElement).closest('[data-checkbox]')) {
+      return;
+    }
+    onTaskClick(task.id);
+  };
+
   return (
-    <Row>
+    <Row 
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      onClick={handleRowClick}
+    >
       <Checkbox 
+        data-checkbox
         $checked={task.status === 'done'} 
         $color={checklistColor}
         $disabled={isUpdating}
+        $isSelected={isSelected}
         onClick={handleCheckboxClick}
       >
-        {task.status === 'done' && <Checkmark>✓</Checkmark>}
+        {isSelected ? (
+          <SelectionIndicator>−</SelectionIndicator>
+        ) : task.status === 'done' ? (
+          <Checkmark>✓</Checkmark>
+        ) : null}
       </Checkbox>
       <TaskContent>
-        <TaskDescription $isDone={task.status === 'done'}>
-          {task.title}
-        </TaskDescription>
+        <TitleRow>
+          <TaskDescription $isDone={task.status === 'done'}>
+            {task.title}
+          </TaskDescription>
+          {isHovering && <ViewButton>View →</ViewButton>}
+        </TitleRow>
         <TaskMeta>
           {task.assignedToUser ? (
             <Assignee>👤 {task.assignedToUser.displayName}</Assignee>
@@ -97,13 +121,14 @@ const Row = styled.div`
   padding: 12px;
   border-radius: 6px;
   transition: background 0.15s;
+  cursor: pointer;
 
   &:hover {
     background: #f9fafb;
   }
 `;
 
-const Checkbox = styled.div<{ $checked: boolean; $color: string; $disabled: boolean }>`
+const Checkbox = styled.div<{ $checked: boolean; $color: string; $disabled: boolean; $isSelected: boolean }>`
   width: 20px;
   height: 20px;
   border-radius: 4px;
@@ -116,7 +141,10 @@ const Checkbox = styled.div<{ $checked: boolean; $color: string; $disabled: bool
   margin-top: 2px;
   opacity: ${p => p.$disabled ? 0.5 : 1};
   
-  ${p => p.$checked ? `
+  ${p => p.$isSelected ? `
+    background: ${p.$color};
+    border: 2px solid ${p.$color};
+  ` : p.$checked ? `
     background: ${p.$color};
     border: 2px solid ${p.$color};
   ` : `
@@ -136,18 +164,52 @@ const Checkmark = styled.span`
   line-height: 1;
 `;
 
+const SelectionIndicator = styled.span`
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1;
+`;
+
 const TaskContent = styled.div`
   flex: 1;
   min-width: 0;
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
 `;
 
 const TaskDescription = styled.div<{ $isDone?: boolean }>`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   color: #1f2937;
-  margin-bottom: 6px;
   text-decoration: ${p => p.$isDone ? 'line-through' : 'none'};
   opacity: ${p => p.$isDone ? 0.7 : 1};
+  flex: 1;
+`;
+
+const ViewButton = styled.button`
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6366F1;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+
+  &:hover {
+    background: #f0f9ff;
+    border-color: #6366F1;
+  }
 `;
 
 const TaskMeta = styled.div`

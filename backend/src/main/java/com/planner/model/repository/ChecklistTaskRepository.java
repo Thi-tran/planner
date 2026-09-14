@@ -50,4 +50,26 @@ public interface ChecklistTaskRepository extends JpaRepository<ChecklistTaskEnti
      */
     @Query("SELECT t FROM ChecklistTaskEntity t JOIN FETCH t.checklist c JOIN FETCH c.project WHERE t.id = :id")
     Optional<ChecklistTaskEntity> findByIdWithChecklist(@Param("id") UUID id);
+    
+    /**
+     * Find task with all details (assignee, comments, checklist, project) for task details panel.
+     * Avoids N+1 query problem by fetching all relationships in single query.
+     */
+    @Query("SELECT t FROM ChecklistTaskEntity t " +
+           "JOIN FETCH t.checklist c " +
+           "JOIN FETCH c.project p " +
+           "LEFT JOIN FETCH t.assignedToUser " +
+           "LEFT JOIN FETCH t.comments cmt " +
+           "LEFT JOIN FETCH cmt.user " +
+           "WHERE t.id = :taskId")
+    Optional<ChecklistTaskEntity> findByIdWithDetails(@Param("taskId") UUID taskId);
+    
+    /**
+     * Find all tasks in a checklist ordered by display order.
+     * Used for prev/next task navigation in task details panel.
+     */
+    @Query("SELECT t FROM ChecklistTaskEntity t " +
+           "WHERE t.checklist.id = :checklistId " +
+           "ORDER BY t.displayOrder ASC")
+    List<ChecklistTaskEntity> findByChecklistIdOrderByDisplayOrder(@Param("checklistId") UUID checklistId);
 }

@@ -10,9 +10,11 @@ interface ChecklistCardProps {
   expanded: boolean;
   onToggle: () => void;
   onTaskAdded: () => void;
+  onTaskClick: (taskId: string) => void;
+  selectedTaskId?: string | null;
 }
 
-export default function ChecklistCard({ checklist, expanded, onToggle, onTaskAdded }: ChecklistCardProps) {
+export default function ChecklistCard({ checklist, expanded, onToggle, onTaskAdded, onTaskClick, selectedTaskId }: ChecklistCardProps) {
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
   const completedCount = checklist.tasks.filter(t => t.status === 'done').length;
   const totalTasks = checklist.tasks.length;
@@ -41,8 +43,8 @@ export default function ChecklistCard({ checklist, expanded, onToggle, onTaskAdd
   };
 
   return (
-    <Card $borderColor={colorHex} onClick={onToggle}>
-      <CardHeader>
+    <Card $borderColor={colorHex}>
+      <CardHeader onClick={onToggle}>
         <HeaderContent>
           <ChecklistName>{checklist.name}</ChecklistName>
           {checklist.description && (
@@ -54,7 +56,7 @@ export default function ChecklistCard({ checklist, expanded, onToggle, onTaskAdd
         </ExpandIcon>
       </CardHeader>
 
-      <ProgressSection>
+      <ProgressSection onClick={onToggle}>
         <ProgressInfo>
           <ProgressText>{completedCount}/{totalTasks} done</ProgressText>
           <ProgressPercentage>{percentage}%</ProgressPercentage>
@@ -76,6 +78,8 @@ export default function ChecklistCard({ checklist, expanded, onToggle, onTaskAdd
                     task={task} 
                     checklistColor={colorHex}
                     onStatusChange={onTaskAdded}
+                    onTaskClick={onTaskClick}
+                    isSelected={selectedTaskId === task.id}
                   />
                 ))}
             </TaskList>
@@ -105,7 +109,6 @@ const Card = styled.div<{ $borderColor: string }>`
   border-left: 4px solid ${p => p.$borderColor};
   border-radius: 8px;
   padding: 16px;
-  cursor: pointer;
   transition: box-shadow 0.15s;
 
   &:hover {
@@ -119,6 +122,10 @@ const CardHeader = styled.div`
   gap: 12px;
   margin-bottom: 12px;
   cursor: pointer;
+  
+  &:hover {
+    opacity: 0.9;
+  }
 `;
 
 const HeaderContent = styled.div`
@@ -155,6 +162,11 @@ const ExpandIcon = styled.span<{ $expanded: boolean }>`
 
 const ProgressSection = styled.div`
   margin-bottom: 12px;
+  cursor: pointer;
+  
+  &:hover {
+    opacity: 0.9;
+  }
 `;
 
 const ProgressInfo = styled.div`
