@@ -3,8 +3,11 @@ package com.planner.controller;
 import com.planner.domain.ChecklistRequest;
 import com.planner.domain.ChecklistResponse;
 import com.planner.domain.ChecklistSummaryResponse;
+import com.planner.domain.CommentRequest;
+import com.planner.domain.TaskCommentResponse;
 import com.planner.domain.TaskRequest;
 import com.planner.domain.TaskResponse;
+import com.planner.domain.UpdateTaskRequest;
 import com.planner.domain.UpdateTaskStatusRequest;
 import com.planner.model.entity.UserEntity;
 import com.planner.security.CurrentUserService;
@@ -80,5 +83,41 @@ public class ChecklistController {
         UserEntity user = currentUserService.resolveCurrentUser(jwt);
         TaskResponse task = checklistService.updateTaskStatus(taskId, request.getStatus(), user.getId());
         return ResponseEntity.ok(task);
+    }
+    
+    @GetMapping("/tasks/{taskId}")
+    public ResponseEntity<TaskResponse> getTask(
+            @PathVariable UUID taskId,
+            @AuthenticationPrincipal Jwt jwt) {
+        UserEntity user = currentUserService.resolveCurrentUser(jwt);
+        return ResponseEntity.ok(checklistService.getTaskDetails(taskId, user.getId()));
+    }
+    
+    @PutMapping("/tasks/{taskId}")
+    public ResponseEntity<TaskResponse> updateTask(
+            @PathVariable UUID taskId,
+            @Valid @RequestBody UpdateTaskRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+        UserEntity user = currentUserService.resolveCurrentUser(jwt);
+        return ResponseEntity.ok(checklistService.updateTask(taskId, request, user.getId()));
+    }
+    
+    @DeleteMapping("/tasks/{taskId}")
+    public ResponseEntity<Void> deleteTask(
+            @PathVariable UUID taskId,
+            @AuthenticationPrincipal Jwt jwt) {
+        UserEntity user = currentUserService.resolveCurrentUser(jwt);
+        checklistService.deleteTask(taskId, user.getId());
+        return ResponseEntity.noContent().build();
+    }
+    
+    @PostMapping("/tasks/{taskId}/comments")
+    public ResponseEntity<TaskCommentResponse> addComment(
+            @PathVariable UUID taskId,
+            @Valid @RequestBody CommentRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+        UserEntity user = currentUserService.resolveCurrentUser(jwt);
+        TaskCommentResponse comment = checklistService.addComment(taskId, request, user.getId());
+        return ResponseEntity.status(201).body(comment);
     }
 }

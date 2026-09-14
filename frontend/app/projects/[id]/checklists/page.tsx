@@ -10,6 +10,7 @@ import SummaryMetrics from '@/components/checklists/SummaryMetrics';
 import ChecklistCard from '@/components/checklists/ChecklistCard';
 import EmptyState from '@/components/checklists/EmptyState';
 import CreateChecklistModal from '@/components/checklists/CreateChecklistModal';
+import TaskDetailsPanel from '@/components/checklists/TaskDetailsPanel';
 
 interface ChecklistsPageProps {
   params: Promise<{ id: string }>;
@@ -24,6 +25,8 @@ export default function ChecklistsPage({ params }: ChecklistsPageProps) {
   const [error, setError] = useState<string | null>(null);
   const [expandedChecklistId, setExpandedChecklistId] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  const [selectedTaskChecklistId, setSelectedTaskChecklistId] = useState<string | null>(null);
 
   useEffect(() => {
     params.then(p => setProjectId(p.id));
@@ -120,6 +123,75 @@ export default function ChecklistsPage({ params }: ChecklistsPageProps) {
     await fetchData();
   };
 
+  const handleTaskClick = (taskId: string, checklistId: string) => {
+    setSelectedTaskId(taskId);
+    setSelectedTaskChecklistId(checklistId);
+  };
+
+  const handlePanelClose = () => {
+    setSelectedTaskId(null);
+    setSelectedTaskChecklistId(null);
+  };
+
+  const handleTaskDeleted = () => {
+    setSelectedTaskId(null);
+    setSelectedTaskChecklistId(null);
+    fetchData();
+  };
+
+  const handleTaskUpdated = () => {
+    // Don't refetch all data on every save - the panel manages its own state
+    // Only update the local checklist state to sync the list row without remounting
+    // Full refetch would cause the panel to close/reopen
+    
+    // For now, just skip the refetch - the panel has the latest data
+    // The list row will update when the panel closes
+    // fetchData();
+  };
+
+  // Get checklist info for the selected task
+  const getChecklistInfo = () => {
+    if (!selectedTaskChecklistId) return null;
+    return checklists.find(c => c.id === selectedTaskChecklistId);
+  };
+
+  // Get all tasks in display order for navigation
+  const getAllTasksInOrder = () => {
+    const checklist = getChecklistInfo();
+    if (!checklist) return [];
+    return [...checklist.tasks].sort((a, b) => a.displayOrder - b.displayOrder);
+  };
+
+  // Navigation handlers
+  const handleNavigatePrev = () => {
+    const tasks = getAllTasksInOrder();
+    const currentIndex = tasks.findIndex(t => t.id === selectedTaskId);
+    if (currentIndex > 0) {
+      setSelectedTaskId(tasks[currentIndex - 1].id);
+    }
+  };
+
+  const handleNavigateNext = () => {
+    const tasks = getAllTasksInOrder();
+    const currentIndex = tasks.findIndex(t => t.id === selectedTaskId);
+    if (currentIndex >= 0 && currentIndex < tasks.length - 1) {
+      setSelectedTaskId(tasks[currentIndex + 1].id);
+    }
+  };
+
+  // Check if navigation is possible
+  const canNavigate = () => {
+    const tasks = getAllTasksInOrder();
+    const currentIndex = tasks.findIndex(t => t.id === selectedTaskId);
+    return {
+      prev: currentIndex > 0,
+      next: currentIndex >= 0 && currentIndex < tasks.length - 1
+    };
+  };
+
+  const checklistInfo = getChecklistInfo();
+  const navigation = canNavigate();
+
   if (loading) {
     return (
       <LayoutContainer>
@@ -171,6 +243,8 @@ export default function ChecklistsPage({ params }: ChecklistsPageProps) {
                   expandedChecklistId === checklist.id ? null : checklist.id
                 )}
                 onTaskAdded={fetchData}
+                onTaskClick={(taskId) => handleTaskClick(taskId, checklist.id)}
+                selectedTaskId={selectedTaskId}
               />
             ))}
           </ChecklistsGrid>
@@ -182,6 +256,23 @@ export default function ChecklistsPage({ params }: ChecklistsPageProps) {
           onClose={() => setShowCreateModal(false)}
           onCreateChecklist={handleCreateChecklist}
         />
+
+        {selectedTaskId && checklistInfo && projectId && (
+          <TaskDetailsPanel
+            taskId={selectedTaskId}
+            checklistId={checklistInfo.id}
+            checklistName={checklistInfo.name}
+            checklistColor={checklistInfo.color}
+            projectId={projectId}
+            onClose={handlePanelClose}
+            onTaskDeleted={handleTaskDeleted}
+            onTaskUpdated={handleTaskUpdated}
+            onNavigatePrev={handleNavigatePrev}
+            onNavigateNext={handleNavigateNext}
+            canNavigatePrev={navigation.prev}
+            canNavigateNext={navigation.next}
+          />
+        )}
       </Container>
     </LayoutContainer>
   );
