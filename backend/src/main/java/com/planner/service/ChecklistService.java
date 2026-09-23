@@ -44,6 +44,17 @@ public class ChecklistService {
     }
     
     @Transactional(readOnly = true)
+    public List<ChecklistResponse> listByEvent(UUID projectId, UUID eventId, UUID userId) {
+            // Verify user has access to project
+            projectAccessService.requireRole(projectId, userId, Role.VIEWER);
+
+            List<ChecklistEntity> checklists = checklistRepository.findByEventIdWithTasks(eventId);
+            return checklists.stream()
+                            .map(checklistMapper::toResponse)
+                            .toList();
+    }
+
+    @Transactional(readOnly = true)
     public ChecklistResponse findById(UUID checklistId, UUID userId) {
         ChecklistEntity checklist = checklistRepository.findByIdWithTasksAndComments(checklistId)
                 .orElseThrow(() -> new ResourceNotFoundException("Checklist not found with id: " + checklistId));
