@@ -179,7 +179,7 @@ const Overlay = styled(Dialog.Overlay)`
   background: rgba(0, 0, 0, 0.7);
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: 150;
 `;
 
 const Content = styled(Dialog.Content)`
@@ -194,7 +194,7 @@ const Content = styled(Dialog.Content)`
   max-width: 600px;
   max-height: 85vh;
   padding: 24px;
-  z-index: 51;
+  z-index: 151;
   overflow-y: auto;
 `;
 

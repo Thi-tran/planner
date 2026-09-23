@@ -144,6 +144,17 @@ export async function createChecklist(projectId: string, data: ChecklistRequest)
   });
 }
 
+export async function getChecklistsByEvent(projectId: string, eventId: string): Promise<Checklist[]> {
+  return request<Checklist[]>(`/api/projects/${projectId}/events/${eventId}/checklists`);
+}
+
+export async function createChecklistForEvent(projectId: string, eventId: string, data: ChecklistRequest): Promise<Checklist> {
+  return request<Checklist>(`/api/projects/${projectId}/events/${eventId}/checklists`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
 export async function addTask(checklistId: string, data: TaskRequest): Promise<ChecklistTask> {
   return request<ChecklistTask>(`/api/checklists/${checklistId}/tasks`, {
     method: 'POST',

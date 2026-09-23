@@ -80,7 +80,7 @@ export default function ChecklistCard({ checklist, expanded, onToggle, onTaskAdd
                 ))}
             </TaskList>
           )}
-          <AddTaskButton onClick={handleAddTaskClick}>
+          <AddTaskButton type="button" onClick={handleAddTaskClick}>
             + Add task
           </AddTaskButton>
         </>

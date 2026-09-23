@@ -4,8 +4,10 @@ import React, { useState, useEffect, startTransition } from 'react';
 import styled from 'styled-components';
 import * as Dialog from '@radix-ui/react-dialog';
 import { format, addHours, parseISO } from 'date-fns';
-import type { CalendarEvent, EventRequest, Category } from '../../lib/types';
+import type { CalendarEvent, EventRequest, Category, Checklist } from '../../lib/types';
 import CategoryPicker from './CategoryPicker';
+import ChecklistCard from '../checklists/ChecklistCard';
+import { getChecklistsByEvent, createChecklistForEvent } from '../../lib/api';
 
 function toLocalDatetimeValue(isoString: string): string {
   const d = parseISO(isoString);
@@ -71,6 +73,60 @@ export default function EventModal({
   const [categoryId, setCategoryId] = useState<string | null>(state.initialEvent?.categoryId ?? null);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  const [checklists, setChecklists] = useState<Checklist[]>([]);
+  const [checklistsLoading, setChecklistsLoading] = useState(false);
+  const [expandedChecklistId, setExpandedChecklistId] = useState<string | null>(null);
+  const [showChecklistInput, setShowChecklistInput] = useState(false);
+  const [newChecklistName, setNewChecklistName] = useState('');
+  const [creatingChecklist, setCreatingChecklist] = useState(false);
+
+  const eventId = state.initialEvent?.id;
+
+  async function loadChecklists() {
+    if (!activeProjectId || !eventId) return;
+    setChecklistsLoading(true);
+    try {
+      const data = await getChecklistsByEvent(activeProjectId, eventId);
+      setChecklists(data);
+    } catch {
+      // Silently ignore — checklist section is supplementary to the event form
+    } finally {
+      setChecklistsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (state.open && eventId) {
+      loadChecklists();
+    } else {
+      setChecklists([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.open, eventId]);
+
+  async function handleNewChecklistSubmit(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Escape') {
+      setShowChecklistInput(false);
+      setNewChecklistName('');
+      return;
+    }
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const name = newChecklistName.trim();
+    if (!name || !activeProjectId || !eventId || creatingChecklist) return;
+    setCreatingChecklist(true);
+    try {
+      await createChecklistForEvent(activeProjectId, eventId, { name, color: 'Sky Cyan' });
+      await loadChecklists();
+      setNewChecklistName('');
+      setShowChecklistInput(false);
+    } catch {
+      setError('Failed to create checklist. Please try again.');
+    } finally {
+      setCreatingChecklist(false);
+    }
+  }
 
   useEffect(() => {
     if (state.open) {
@@ -197,6 +253,52 @@ export default function EventModal({
               />
             </Field>
 
+            {isEdit && eventId && (
+              <Field>
+                <ChecklistSectionHeader>
+                  <Label>Checklists</Label>
+                  {!showChecklistInput && (
+                    <AddChecklistButton type="button" onClick={() => setShowChecklistInput(true)}>
+                      + Add checklist
+                    </AddChecklistButton>
+                  )}
+                </ChecklistSectionHeader>
+                {showChecklistInput && (
+                  <Input
+                    type="text"
+                    autoFocus
+                    placeholder="Type a name and press Enter…"
+                    value={newChecklistName}
+                    disabled={creatingChecklist}
+                    onChange={(e) => setNewChecklistName(e.target.value)}
+                    onKeyDown={handleNewChecklistSubmit}
+                    onBlur={() => {
+                      if (!newChecklistName.trim()) setShowChecklistInput(false);
+                    }}
+                  />
+                )}
+                {checklistsLoading ? (
+                  <ChecklistEmptyText>Loading checklists…</ChecklistEmptyText>
+                ) : checklists.length === 0 ? (
+                  !showChecklistInput && <ChecklistEmptyText>No checklists yet for this event.</ChecklistEmptyText>
+                ) : (
+                  <ChecklistList>
+                    {checklists.map((checklist) => (
+                      <ChecklistCard
+                        key={checklist.id}
+                        checklist={checklist}
+                        expanded={expandedChecklistId === checklist.id}
+                        onToggle={() =>
+                          setExpandedChecklistId((prev) => (prev === checklist.id ? null : checklist.id))
+                        }
+                        onTaskAdded={loadChecklists}
+                      />
+                    ))}
+                  </ChecklistList>
+                )}
+              </Field>
+            )}
+
             {error && <ErrorMsg>{error}</ErrorMsg>}
 
             <Actions>
@@ -307,6 +409,38 @@ const ErrorMsg = styled.p`
   color: var(--danger-text);
   font-size: 13px;
   margin: 0;
+`;
+
+const ChecklistSectionHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const AddChecklistButton = styled.button`
+  padding: 4px 10px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  background: var(--surface-alt);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--foreground);
+  cursor: pointer;
+  &:hover { background: var(--sidebar-border); }
+`;
+
+const ChecklistEmptyText = styled.p`
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin: 0;
+`;
+
+const ChecklistList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 260px;
+  overflow-y: auto;
 `;
 
 const Actions = styled.div`
