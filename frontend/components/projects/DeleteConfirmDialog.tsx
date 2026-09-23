@@ -55,14 +55,15 @@ export default function DeleteConfirmDialog({
 }
 
 const Overlay = styled(Dialog.Overlay)`
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   position: fixed;
   inset: 0;
   z-index: 52;
 `;
 
 const Content = styled(Dialog.Content)`
-  background: white;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   position: fixed;
   top: 50%;
@@ -90,13 +91,13 @@ const Title = styled.h2`
   font-size: 18px;
   font-weight: 700;
   margin: 0;
-  color: #1f2937;
+  color: var(--foreground);
 `;
 
 const Message = styled.p`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin: 0 0 24px 0;
   line-height: 1.5;
 `;
@@ -111,15 +112,15 @@ const CancelButton = styled.button`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   padding: 10px 20px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-light);
   border-radius: 4px;
-  background: white;
-  color: #374151;
+  background: var(--surface-alt);
+  color: var(--text-tertiary);
   cursor: pointer;
   transition: background 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: #f9fafb;
+    background: var(--sidebar-border);
   }
 
   &:disabled {

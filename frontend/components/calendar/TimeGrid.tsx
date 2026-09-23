@@ -151,7 +151,7 @@ const GridContainer = styled.div`
 const TimeGutter = styled.div`
   width: 56px;
   flex-shrink: 0;
-  border-right: 1px solid #e2e8f0;
+  border-right: 1px solid var(--sidebar-border);
   padding-top: 40px;
 `;
 
@@ -161,7 +161,7 @@ const HourLabel = styled.div`
   justify-content: flex-end;
   padding-right: 8px;
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--text-muted);
   box-sizing: border-box;
 `;
 
@@ -172,8 +172,8 @@ const ColumnsArea = styled.div`
 
 const Column = styled.div<{ $isToday: boolean }>`
   flex: 1;
-  border-right: 1px solid #e2e8f0;
-  background: ${({ $isToday }) => ($isToday ? '#eff6ff' : '#fff')};
+  border-right: 1px solid var(--sidebar-border);
+  background: ${({ $isToday }) => ($isToday ? 'rgba(59, 130, 246, 0.08)' : 'var(--background)')};
   &:last-child {
     border-right: none;
   }
@@ -186,9 +186,9 @@ const ColumnHeader = styled.div<{ $isToday: boolean }>`
   justify-content: center;
   gap: 4px;
   font-size: 12px;
-  color: ${({ $isToday }) => ($isToday ? '#2563eb' : '#64748b')};
+  color: ${({ $isToday }) => ($isToday ? 'var(--nav-blue)' : 'var(--text-secondary)')};
   font-weight: ${({ $isToday }) => ($isToday ? '700' : '400')};
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--sidebar-border);
   position: sticky;
   top: 0;
   background: inherit;
@@ -202,7 +202,7 @@ const DayNumber = styled.span<{ $isToday: boolean }>`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: ${({ $isToday }) => ($isToday ? '#2563eb' : 'transparent')};
+  background: ${({ $isToday }) => ($isToday ? '#3b82f6' : 'transparent')};
   color: ${({ $isToday }) => ($isToday ? '#fff' : 'inherit')};
   font-size: 13px;
 `;
@@ -217,6 +217,6 @@ const HourRow = styled.div`
   left: 0;
   right: 0;
   height: 60px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--sidebar-border);
   pointer-events: none;
 `;

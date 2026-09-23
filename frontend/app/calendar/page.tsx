@@ -9,7 +9,8 @@ function CalendarLoading() {
       alignItems: 'center', 
       height: '100vh',
       fontFamily: 'DM Sans, sans-serif',
-      color: '#6b7280'
+      color: 'var(--text-secondary)',
+      background: 'var(--background)'
     }}>
       Loading calendar...
     </div>

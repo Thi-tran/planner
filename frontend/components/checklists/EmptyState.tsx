@@ -29,13 +29,13 @@ const Title = styled.h2`
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 20px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--foreground);
   margin: 0 0 8px 0;
 `;
 
 const Subtitle = styled.p`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin: 0;
 `;

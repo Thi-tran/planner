@@ -76,18 +76,19 @@ export default function ProjectCard({ project, onClick, onEdit }: ProjectCardPro
 }
 
 const Card = styled.div`
-  background: white;
+  background: var(--surface);
   border-radius: 8px;
   padding: 16px;
   cursor: pointer;
   position: relative;
-  transition: box-shadow 0.2s ease;
-  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
 
   &:hover {
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-color: var(--card-hover-border);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
   }
 `;
 
@@ -121,7 +122,7 @@ const EditButton = styled.button`
   }
 
   &:focus {
-    outline: 2px solid #5EC4CD;
+    outline: 2px solid #3b82f6;
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -132,19 +133,20 @@ const Title = styled.h3`
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 8px 0;
+  color: var(--foreground);
 `;
 
 const DateRange = styled.div`
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin-bottom: 8px;
 `;
 
 const Description = styled.p`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  color: #374151;
+  color: var(--text-tertiary);
   margin: 0 0 12px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -172,7 +174,7 @@ const ProgressContainer = styled.div`
 
 const ProgressBar = styled.div`
   height: 8px;
-  background: #e2e8f0;
+  background: var(--border);
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 8px;
@@ -194,12 +196,12 @@ const ProgressInfo = styled.div`
 const ProgressText = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-secondary);
 `;
 
 const TasksLeft = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-secondary);
   text-align: right;
 `;

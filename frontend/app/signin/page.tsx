@@ -18,7 +18,7 @@ export default function SignInPage() {
       }}
     >
       <h1 style={{ fontSize: '2rem', fontWeight: 700, margin: 0 }}>Planner</h1>
-      <p style={{ color: '#6b7280', margin: 0 }}>Sign in to access your calendar</p>
+      <p style={{ color: 'var(--text-secondary)', margin: 0 }}>Sign in to access your calendar</p>
       <button
         onClick={() => signIn('google', { redirectTo: '/calendar' })}
         style={{
@@ -27,13 +27,13 @@ export default function SignInPage() {
           gap: '10px',
           padding: '12px 24px',
           borderRadius: '8px',
-          border: '1px solid #d1d5db',
-          background: '#fff',
-          color: '#111827',
+          border: '1px solid var(--border-light)',
+          background: 'var(--surface)',
+          color: 'var(--foreground)',
           fontSize: '1rem',
           fontWeight: 500,
           cursor: 'pointer',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
         }}
       >
         <GoogleIcon />

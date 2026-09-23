@@ -224,7 +224,7 @@ export default function EventModal({
 const Overlay = styled(Dialog.Overlay)`
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 100;
 `;
 
@@ -233,20 +233,21 @@ const Content = styled(Dialog.Content)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 24px;
   width: 460px;
   max-width: 95vw;
   z-index: 101;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 `;
 
 const ModalTitle = styled.h2`
   margin: 0 0 20px;
   font-size: 18px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--foreground);
 `;
 
 const Form = styled.form`
@@ -270,38 +271,40 @@ const Row = styled.div`
 const Label = styled.label`
   font-size: 13px;
   font-weight: 500;
-  color: #475569;
+  color: var(--text-tertiary);
 `;
 
 const Input = styled.input`
   padding: 8px 10px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-light);
   border-radius: 6px;
   font-size: 14px;
-  color: #1e293b;
+  color: var(--foreground);
+  background: var(--input-bg);
   outline: none;
   &:focus {
     border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
   }
 `;
 
 const Textarea = styled.textarea`
   padding: 8px 10px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-light);
   border-radius: 6px;
   font-size: 14px;
-  color: #1e293b;
+  color: var(--foreground);
+  background: var(--input-bg);
   resize: vertical;
   outline: none;
   &:focus {
     border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
   }
 `;
 
 const ErrorMsg = styled.p`
-  color: #ef4444;
+  color: var(--danger-text);
   font-size: 13px;
   margin: 0;
 `;
@@ -321,13 +324,13 @@ const RightActions = styled.div`
 
 const CancelButton = styled.button`
   padding: 8px 16px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-light);
   border-radius: 6px;
-  background: #fff;
+  background: var(--surface-alt);
   font-size: 14px;
   cursor: pointer;
-  color: #374151;
-  &:hover:not(:disabled) { background: #f8fafc; }
+  color: var(--text-tertiary);
+  &:hover:not(:disabled) { background: var(--sidebar-border); }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 `;
 

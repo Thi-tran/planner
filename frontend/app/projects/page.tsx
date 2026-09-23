@@ -225,6 +225,7 @@ const Title = styled.h1`
   font-size: 22px;
   font-weight: 700;
   margin: 0;
+  color: var(--foreground);
 `;
 
 const FilterContainer = styled.div`
@@ -236,26 +237,31 @@ const FilterContainer = styled.div`
 const FilterLabel = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
 `;
 
 const FilterSelect = styled.select`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   padding: 8px 32px 8px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-light);
   border-radius: 4px;
   outline: none;
-  background: white;
+  background: var(--surface);
+  color: var(--foreground);
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a1a1aa' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 8px center;
 
+  @media (prefers-color-scheme: light) {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2352525b' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  }
+
   &:focus {
-    border-color: #5EC4CD;
-    box-shadow: 0 0 0 3px rgba(94, 196, 205, 0.1);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
   }
 `;
 
@@ -267,7 +273,8 @@ const MetricsRow = styled.div`
 `;
 
 const MetricCard = styled.div`
-  background: #f8fafc;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 16px;
   text-align: center;
@@ -277,13 +284,13 @@ const MetricValue = styled.div`
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 32px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--foreground);
 `;
 
 const MetricLabel = styled.div`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin-top: 4px;
 `;
 
@@ -302,12 +309,12 @@ const LoadingSpinner = styled.div`
   padding: 64px 24px;
   font-family: 'DM Sans', sans-serif;
   font-size: 16px;
-  color: #6b7280;
+  color: var(--text-secondary);
 `;
 
 const ErrorBanner = styled.div`
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
   border-radius: 8px;
   padding: 16px;
   display: flex;
@@ -318,20 +325,20 @@ const ErrorBanner = styled.div`
 const ErrorText = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  color: #991b1b;
+  color: var(--danger-text);
 `;
 
 const RetryButton = styled.button`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   padding: 8px 16px;
-  border: 1px solid #991b1b;
+  border: 1px solid #ef4444;
   border-radius: 4px;
-  background: white;
-  color: #991b1b;
+  background: transparent;
+  color: var(--danger-text);
   cursor: pointer;
 
   &:hover {
-    background: #fef2f2;
+    background: rgba(239, 68, 68, 0.12);
   }
 `;
