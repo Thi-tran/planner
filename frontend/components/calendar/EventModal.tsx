@@ -98,6 +98,7 @@ export default function EventModal({
 
   useEffect(() => {
     if (state.open && eventId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- fetching checklists from the backend to sync with the currently open event
       loadChecklists();
     } else {
       setChecklists([]);
