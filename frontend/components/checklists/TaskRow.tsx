@@ -99,7 +99,7 @@ const Row = styled.div`
   transition: background 0.15s;
 
   &:hover {
-    background: #f9fafb;
+    background: var(--surface-alt);
   }
 `;
 
@@ -120,11 +120,11 @@ const Checkbox = styled.div<{ $checked: boolean; $color: string; $disabled: bool
     background: ${p.$color};
     border: 2px solid ${p.$color};
   ` : `
-    background: white;
+    background: var(--input-bg);
     border: 2px solid ${p.$color};
     
     &:hover {
-      background: ${p.$disabled ? 'white' : `${p.$color}10`};
+      background: ${p.$disabled ? 'var(--input-bg)' : `${p.$color}20`};
     }
   `}
 `;
@@ -144,7 +144,7 @@ const TaskContent = styled.div`
 const TaskDescription = styled.div<{ $isDone?: boolean }>`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  color: #1f2937;
+  color: var(--foreground);
   margin-bottom: 6px;
   text-decoration: ${p => p.$isDone ? 'line-through' : 'none'};
   opacity: ${p => p.$isDone ? 0.7 : 1};
@@ -160,7 +160,7 @@ const TaskMeta = styled.div`
 const Assignee = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-secondary);
 `;
 
 const DeadlinePill = styled.span<{ $color: string }>`
@@ -176,12 +176,12 @@ const DeadlinePill = styled.span<{ $color: string }>`
 const CommentCount = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-secondary);
 `;
 
 const ErrorMessage = styled.div`
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  color: #ef4444;
+  color: var(--danger-text);
   margin-top: 4px;
 `;

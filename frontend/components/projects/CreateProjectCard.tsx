@@ -16,8 +16,8 @@ export default function CreateProjectCard({ onClick }: CreateProjectCardProps) {
 }
 
 const Card = styled.div`
-  background: #f8fafc;
-  border: 2px dashed #cbd5e1;
+  background: var(--surface);
+  border: 2px dashed var(--border-light);
   border-radius: 8px;
   padding: 16px;
   min-height: 200px;
@@ -29,15 +29,15 @@ const Card = styled.div`
   transition: background 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    background: #f1f5f9;
-    border-color: #94a3b8;
+    background: var(--surface-alt);
+    border-color: #3b82f6;
   }
 `;
 
 const PlusIcon = styled.div`
   font-size: 48px;
   font-weight: 300;
-  color: #6366f1;
+  color: var(--nav-blue);
   line-height: 1;
   margin-bottom: 12px;
 `;
@@ -45,6 +45,6 @@ const PlusIcon = styled.div`
 const Label = styled.div`
   font-family: 'DM Sans', sans-serif;
   font-size: 16px;
-  color: #475569;
+  color: var(--text-secondary);
   font-weight: 500;
 `;

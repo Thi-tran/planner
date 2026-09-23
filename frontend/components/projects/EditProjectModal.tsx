@@ -264,14 +264,15 @@ export default function EditProjectModal({
 }
 
 const Overlay = styled(Dialog.Overlay)`
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   position: fixed;
   inset: 0;
   z-index: 50;
 `;
 
 const Content = styled(Dialog.Content)`
-  background: white;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   position: fixed;
   top: 50%;
@@ -297,6 +298,7 @@ const Title = styled.h2`
   font-size: 22px;
   font-weight: 700;
   margin: 0;
+  color: var(--foreground);
 `;
 
 const CloseButton = styled.button`
@@ -305,7 +307,7 @@ const CloseButton = styled.button`
   font-size: 32px;
   line-height: 1;
   cursor: pointer;
-  color: #6b7280;
+  color: var(--text-secondary);
   padding: 0;
   width: 32px;
   height: 32px;
@@ -314,7 +316,7 @@ const CloseButton = styled.button`
   justify-content: center;
 
   &:hover {
-    color: #374151;
+    color: var(--foreground);
   }
 `;
 
@@ -334,7 +336,7 @@ const Label = styled.label`
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-tertiary);
 `;
 
 const Required = styled.span`
@@ -345,17 +347,19 @@ const Input = styled.input`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   padding: 8px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-light);
   border-radius: 4px;
   outline: none;
+  background: var(--input-bg);
+  color: var(--foreground);
 
   &:focus {
-    border-color: #5EC4CD;
-    box-shadow: 0 0 0 3px rgba(94, 196, 205, 0.1);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
   }
 
   &:disabled {
-    background: #f3f4f6;
+    background: var(--input-disabled-bg);
     cursor: not-allowed;
   }
 `;
@@ -364,21 +368,23 @@ const Textarea = styled.textarea`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   padding: 8px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-light);
   border-radius: 4px;
   outline: none;
   resize: vertical;
+  background: var(--input-bg);
+  color: var(--foreground);
 
   &:focus {
-    border-color: #5EC4CD;
-    box-shadow: 0 0 0 3px rgba(94, 196, 205, 0.1);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
   }
 `;
 
 const CharCounter = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  color: #9ca3af;
+  color: var(--text-muted);
   text-align: right;
 `;
 
@@ -391,7 +397,7 @@ const DateRow = styled.div`
 const ErrorText = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  color: #ef4444;
+  color: var(--danger-text);
 `;
 
 const ActionsRow = styled.div`
@@ -411,15 +417,15 @@ const CancelButton = styled.button`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   padding: 10px 20px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-light);
   border-radius: 4px;
-  background: white;
-  color: #374151;
+  background: var(--surface-alt);
+  color: var(--text-tertiary);
   cursor: pointer;
   transition: background 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: #f9fafb;
+    background: var(--sidebar-border);
   }
 
   &:disabled {
@@ -435,13 +441,13 @@ const SaveButton = styled.button`
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
-  background: #5EC4CD;
+  background: #3b82f6;
   color: white;
   cursor: pointer;
   transition: background 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: #4da9b8;
+    background: #2563eb;
   }
 
   &:disabled {

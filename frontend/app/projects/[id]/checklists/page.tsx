@@ -213,6 +213,7 @@ const Title = styled.h1`
   font-size: 22px;
   font-weight: 700;
   margin: 0;
+  color: var(--foreground);
 `;
 
 const ChecklistsGrid = styled.div`
@@ -227,12 +228,12 @@ const LoadingSpinner = styled.div`
   padding: 64px 24px;
   font-family: 'DM Sans', sans-serif;
   font-size: 16px;
-  color: #6b7280;
+  color: var(--text-secondary);
 `;
 
 const ErrorBanner = styled.div`
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
   border-radius: 8px;
   padding: 16px;
   display: flex;
@@ -243,21 +244,21 @@ const ErrorBanner = styled.div`
 const ErrorText = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  color: #991b1b;
+  color: var(--danger-text);
 `;
 
 const RetryButton = styled.button`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   padding: 8px 16px;
-  border: 1px solid #991b1b;
+  border: 1px solid #ef4444;
   border-radius: 4px;
-  background: white;
-  color: #991b1b;
+  background: transparent;
+  color: var(--danger-text);
   cursor: pointer;
 
   &:hover {
-    background: #fef2f2;
+    background: rgba(239, 68, 68, 0.12);
   }
 `;
 
@@ -268,12 +269,12 @@ const CreateButton = styled.button`
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
-  background: #5EC4CD;
+  background: #3b82f6;
   color: white;
   cursor: pointer;
   transition: background 0.2s ease;
 
   &:hover {
-    background: #4da9b8;
+    background: #2563eb;
   }
 `;
