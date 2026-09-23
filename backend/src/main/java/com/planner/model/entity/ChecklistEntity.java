@@ -28,7 +28,11 @@ public class ChecklistEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
     private ProjectEntity project;
-    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private EventEntity event;
+
     @Column(nullable = false, length = 255)
     private String name;
     

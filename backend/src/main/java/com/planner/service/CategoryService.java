@@ -4,7 +4,7 @@ import com.planner.domain.CategoryRequest;
 import com.planner.domain.CategoryResponse;
 import com.planner.exception.ResourceNotFoundException;
 import com.planner.mapper.CategoryMapper;
-import com.planner.model.CategoryRepository;
+import com.planner.model.repository.CategoryRepository;
 import com.planner.model.entity.CategoryEntity;
 import com.planner.model.entity.Role;
 import com.planner.security.ProjectAccessService;

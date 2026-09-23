@@ -1,4 +1,4 @@
-package com.planner.model;
+package com.planner.model.repository;
 
 import com.planner.model.entity.CategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -25,11 +25,12 @@ public class ChecklistService {
     
     private final ChecklistRepository checklistRepository;
     private final ChecklistTaskRepository checklistTaskRepository;
-    private final ChecklistMapper checklistMapper;
-    private final ProjectAccessService projectAccessService;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final ProjectMembershipRepository membershipRepository;
+    private final EventRepository eventRepository;
+    private final ChecklistMapper checklistMapper;
+    private final ProjectAccessService projectAccessService;
     
     @Transactional(readOnly = true)
     public List<ChecklistResponse> listByProject(UUID projectId, UUID userId) {
@@ -42,6 +43,17 @@ public class ChecklistService {
                 .toList();
     }
     
+    @Transactional(readOnly = true)
+    public List<ChecklistResponse> listByEvent(UUID projectId, UUID eventId, UUID userId) {
+            // Verify user has access to project
+            projectAccessService.requireRole(projectId, userId, Role.VIEWER);
+
+            List<ChecklistEntity> checklists = checklistRepository.findByEventIdWithTasks(eventId);
+            return checklists.stream()
+                            .map(checklistMapper::toResponse)
+                            .toList();
+    }
+
     @Transactional(readOnly = true)
     public ChecklistResponse findById(UUID checklistId, UUID userId) {
         ChecklistEntity checklist = checklistRepository.findByIdWithTasksAndComments(checklistId)
@@ -93,6 +105,34 @@ public class ChecklistService {
         // Save and return
         ChecklistEntity saved = checklistRepository.save(checklist);
         return checklistMapper.toResponse(saved);
+    }
+
+    @Transactional
+    public ChecklistResponse createChecklistForEvent(UUID projectId, UUID eventId, ChecklistRequest request,
+                    UUID userId) {
+            // Validate project access
+            projectAccessService.requireRole(projectId, userId, Role.VIEWER);
+
+            // Load project
+            ProjectEntity project = projectRepository.findById(projectId)
+                            .orElseThrow(() -> new ResourceNotFoundException("Project not found"));
+
+            // Load event
+            EventEntity event = eventRepository.findById(eventId)
+                            .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+
+            // Create checklist entity
+            ChecklistEntity checklist = new ChecklistEntity();
+            checklist.setProject(project);
+            checklist.setEvent(event);
+            checklist.setName(request.getName());
+            checklist.setDescription(request.getDescription());
+            checklist.setColor(request.getColor());
+            checklist.setDueDate(request.getDueDate());
+
+            // Save and return
+            ChecklistEntity saved = checklistRepository.save(checklist);
+            return checklistMapper.toResponse(saved);
     }
     
     @Transactional
