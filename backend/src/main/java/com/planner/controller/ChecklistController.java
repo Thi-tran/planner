@@ -61,7 +61,19 @@ public class ChecklistController {
         ChecklistResponse response = checklistService.create(projectId, request, user.getId());
         return ResponseEntity.status(201).body(response);
     }
-    
+
+    @PostMapping("/projects/{projectId}/events/{eventId}/checklists")
+    public ResponseEntity<ChecklistResponse> createChecklistForEvent(
+            @PathVariable UUID projectId,
+            @PathVariable UUID eventId,
+            @Valid @RequestBody ChecklistRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+        UserEntity user = currentUserService.resolveCurrentUser(jwt);
+        ChecklistResponse response = checklistService.createChecklistForEvent(projectId, eventId, request,
+                user.getId());
+        return ResponseEntity.status(201).body(response);
+    }
+
     @PostMapping("/checklists/{checklistId}/tasks")
     public ResponseEntity<TaskResponse> addTask(
             @PathVariable UUID checklistId,
