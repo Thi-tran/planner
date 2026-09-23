@@ -321,7 +321,7 @@ function InlineEditForm({
 const Overlay = styled(Dialog.Overlay)`
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 100;
 `;
 
@@ -330,14 +330,15 @@ const Content = styled(Dialog.Content)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 24px;
   width: 540px;
   max-width: 95vw;
   max-height: 80vh;
   z-index: 101;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
 `;
@@ -353,7 +354,7 @@ const ModalTitle = styled.h2`
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--foreground);
 `;
 
 const CloseButton = styled.button`
@@ -361,31 +362,31 @@ const CloseButton = styled.button`
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color: #64748b;
+  color: var(--text-secondary);
   padding: 4px;
   line-height: 1;
   &:hover {
-    color: #1e293b;
+    color: var(--foreground);
   }
 `;
 
 const InfoBanner = styled.div`
-  background: #f0f9ff;
-  border: 1px solid #bae6fd;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   border-radius: 6px;
   padding: 10px 12px;
   font-size: 13px;
-  color: #0c4a6e;
+  color: var(--nav-blue-active);
   margin-bottom: 16px;
 `;
 
 const ErrorBanner = styled.div`
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
   border-radius: 6px;
   padding: 10px 12px;
   font-size: 13px;
-  color: #ef4444;
+  color: var(--danger-text);
   margin-bottom: 16px;
 `;
 
@@ -401,7 +402,7 @@ const ScrollableList = styled.div`
 
 const EmptyState = styled.div`
   text-align: center;
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 14px;
   padding: 32px 16px;
 `;
@@ -411,10 +412,10 @@ const CategoryRow = styled.div`
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 6px;
   &:hover {
-    background: #f8fafc;
+    background: var(--surface-alt);
   }
 `;
 
@@ -428,7 +429,7 @@ const ColorDot = styled.span<{ $color: string }>`
 
 const CategoryName = styled.span`
   font-size: 14px;
-  color: #1e293b;
+  color: var(--foreground);
   flex: 1;
   max-width: 200px;
   overflow: hidden;
@@ -452,7 +453,7 @@ const IconButton = styled.button`
   opacity: 0.5;
   &:hover:not(:disabled) {
     opacity: 1;
-    background: #e2e8f0;
+    background: var(--border);
   }
   &:disabled {
     opacity: 0.3;
@@ -462,15 +463,15 @@ const IconButton = styled.button`
 
 const DeleteIconButton = styled(IconButton)`
   &:hover:not(:disabled) {
-    background: #fee2e2;
+    background: rgba(239, 68, 68, 0.2);
   }
 `;
 
 const AddButton = styled.button`
   background: none;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-light);
   cursor: pointer;
-  color: #3b82f6;
+  color: var(--nav-blue);
   font-size: 14px;
   font-weight: 500;
   padding: 10px 14px;
@@ -478,7 +479,7 @@ const AddButton = styled.button`
   width: 100%;
   text-align: center;
   &:hover {
-    background: #f0f9ff;
+    background: rgba(59, 130, 246, 0.12);
     border-color: #3b82f6;
   }
 `;
@@ -488,21 +489,21 @@ const MiniForm = styled.form`
   flex-direction: column;
   gap: 10px;
   padding: 12px;
-  background: #f8fafc;
+  background: var(--surface-alt);
   border-radius: 6px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 `;
 
 const MiniInput = styled.input`
   padding: 8px 10px;
-  background: #fff;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
+  background: var(--input-bg);
+  color: var(--foreground);
+  border: 1px solid var(--border-light);
   border-radius: 4px;
   font-size: 14px;
   outline: none;
   &::placeholder {
-    color: #64748b;
+    color: var(--text-muted);
   }
   &:focus {
     border-color: #3b82f6;
@@ -524,10 +525,10 @@ const MiniSwatch = styled.button<{ $color: string; $selected: boolean }>`
   height: 20px;
   border-radius: 50%;
   background: ${({ $color }) => $color};
-  border: 2px solid ${({ $selected, $color }) => ($selected ? '#1e293b' : $color)};
+  border: 2px solid ${({ $selected, $color }) => ($selected ? 'var(--foreground)' : $color)};
   cursor: pointer;
   padding: 0;
-  box-shadow: ${({ $selected }) => ($selected ? '0 0 0 1px #fff inset' : 'none')};
+  box-shadow: ${({ $selected }) => ($selected ? '0 0 0 1px var(--input-bg) inset' : 'none')};
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -554,10 +555,10 @@ const MiniSaveBtn = styled.button`
 
 const MiniCancelBtn = styled.button`
   padding: 6px 14px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-light);
   border-radius: 4px;
-  background: #fff;
-  color: #374151;
+  background: var(--input-bg);
+  color: var(--text-tertiary);
   font-size: 13px;
   cursor: pointer;
   &:hover:not(:disabled) { background: #f8fafc; }

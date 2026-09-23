@@ -100,8 +100,8 @@ export default function ChecklistCard({ checklist, expanded, onToggle, onTaskAdd
 }
 
 const Card = styled.div<{ $borderColor: string }>`
-  background: white;
-  border: 1px solid #e2e8f0;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-left: 4px solid ${p => p.$borderColor};
   border-radius: 8px;
   padding: 16px;
@@ -109,7 +109,7 @@ const Card = styled.div<{ $borderColor: string }>`
   transition: box-shadow 0.15s;
 
   &:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   }
 `;
 
@@ -129,27 +129,27 @@ const ChecklistName = styled.h3`
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 16px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--foreground);
   margin: 0 0 4px 0;
 `;
 
 const ChecklistDescription = styled.p`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin: 0;
 `;
 
 const ExpandIcon = styled.span<{ $expanded: boolean }>`
   font-size: 14px;
   line-height: 1;
-  color: #94a3b8;
+  color: var(--text-muted);
   flex-shrink: 0;
   transition: color 0.2s ease;
   margin-top: 2px;
   
   ${Card}:hover & {
-    color: #64748b;
+    color: var(--text-secondary);
   }
 `;
 
@@ -167,19 +167,19 @@ const ProgressInfo = styled.div`
 const ProgressText = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--text-secondary);
 `;
 
 const ProgressPercentage = styled.span`
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--foreground);
 `;
 
 const ProgressBar = styled.div`
   height: 6px;
-  background: #e2e8f0;
+  background: var(--border);
   border-radius: 3px;
   overflow: hidden;
 `;
@@ -197,16 +197,16 @@ const TaskList = styled.div`
   gap: 8px;
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border);
 `;
 
 const AddTaskButton = styled.button`
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #5EC4CD;
+  color: var(--nav-blue);
   background: none;
-  border: 1px dashed #cbd5e1;
+  border: 1px dashed var(--border-light);
   border-radius: 4px;
   padding: 10px;
   margin-top: 12px;
@@ -215,7 +215,7 @@ const AddTaskButton = styled.button`
   width: 100%;
 
   &:hover {
-    background: #f0f9fa;
-    border-color: #5EC4CD;
+    background: rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
   }
 `;

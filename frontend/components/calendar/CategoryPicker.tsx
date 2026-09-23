@@ -49,7 +49,7 @@ const Container = styled.div`
   gap: 2px;
   max-height: 220px;
   overflow-y: auto;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 4px;
 `;
@@ -61,10 +61,10 @@ const CategoryRow = styled.div<{ $selected: boolean }>`
   padding: 6px 8px;
   border-radius: 6px;
   cursor: pointer;
-  background: ${({ $selected }) => ($selected ? '#eff6ff' : 'transparent')};
-  border: 1px solid ${({ $selected }) => ($selected ? '#bfdbfe' : 'transparent')};
+  background: ${({ $selected }) => ($selected ? 'rgba(59, 130, 246, 0.15)' : 'transparent')};
+  border: 1px solid ${({ $selected }) => ($selected ? 'rgba(59, 130, 246, 0.4)' : 'transparent')};
   &:hover {
-    background: ${({ $selected }) => ($selected ? '#eff6ff' : '#f8fafc')};
+    background: ${({ $selected }) => ($selected ? 'rgba(59, 130, 246, 0.15)' : 'var(--surface-hover)')};
   }
 `;
 
@@ -78,12 +78,12 @@ const ColorDot = styled.span<{ $color: string }>`
 
 const CategoryName = styled.span`
   font-size: 13px;
-  color: #1e293b;
+  color: var(--foreground);
   flex: 1;
 `;
 
 const Checkmark = styled.span`
   font-size: 14px;
-  color: #2563eb;
+  color: var(--nav-blue);
   font-weight: 600;
 `;

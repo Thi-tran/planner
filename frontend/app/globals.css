@@ -1,8 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0c;
+  --foreground: #f4f4f5;
+  --surface: #16161a;
+  --surface-alt: #1c1c21;
+  --surface-hover: rgba(255, 255, 255, 0.06);
+  --border: #2a2a30;
+  --border-light: #34343b;
+  --card-hover-border: #3a3a42;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --text-tertiary: #d4d4d8;
+  --icon-muted: #52525b;
+  --accent-blue: #3b82f6;
+  --accent-blue-hover: #2563eb;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --danger-text: #f87171;
+  --sidebar-bg: #0d0d10;
+  --sidebar-border: #232329;
+  --nav-blue: #60a5fa;
+  --nav-blue-active: #93c5fd;
+  --nav-active-bg: rgba(59, 130, 246, 0.18);
+  --input-bg: #0f0f12;
+  --input-disabled-bg: #1f1f24;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #f8fafc;
+    --foreground: #18181b;
+    --surface: #ffffff;
+    --surface-alt: #f1f5f9;
+    --surface-hover: rgba(15, 23, 42, 0.05);
+    --border: #e2e8f0;
+    --border-light: #cbd5e1;
+    --card-hover-border: #cbd5e1;
+    --text-secondary: #52525b;
+    --text-muted: #94a3b8;
+    --text-tertiary: #3f3f46;
+    --icon-muted: #94a3b8;
+    --danger-text: #dc2626;
+    --sidebar-bg: #ffffff;
+    --sidebar-border: #e2e8f0;
+    --nav-blue: #2563eb;
+    --nav-blue-active: #1d4ed8;
+    --nav-active-bg: rgba(59, 130, 246, 0.1);
+    --input-bg: #ffffff;
+    --input-disabled-bg: #f1f5f9;
+  }
 }
 
 @theme inline {
@@ -10,13 +57,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {

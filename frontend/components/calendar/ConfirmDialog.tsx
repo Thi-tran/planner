@@ -64,7 +64,7 @@ export default function ConfirmDialog({
 const Overlay = styled(AlertDialog.Overlay)`
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 102;
 `;
 
@@ -73,26 +73,27 @@ const Content = styled(AlertDialog.Content)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 24px;
   width: 400px;
   max-width: 90vw;
   z-index: 103;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 `;
 
 const Title = styled.h2`
   margin: 0 0 12px;
   font-size: 16px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--foreground);
 `;
 
 const Description = styled.p`
   margin: 0 0 20px;
   font-size: 14px;
-  color: #64748b;
+  color: var(--text-secondary);
   line-height: 1.5;
 `;
 
@@ -104,14 +105,14 @@ const Actions = styled.div`
 
 const CancelButton = styled.button`
   padding: 8px 16px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-light);
   border-radius: 6px;
-  background: #fff;
+  background: var(--surface-alt);
   font-size: 14px;
   cursor: pointer;
-  color: #374151;
+  color: var(--text-tertiary);
   &:hover:not(:disabled) {
-    background: #f8fafc;
+    background: var(--sidebar-border);
   }
   &:disabled {
     opacity: 0.5;

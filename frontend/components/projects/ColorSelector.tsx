@@ -49,7 +49,7 @@ const ColorSwatch = styled.button<{ $color: string; $selected: boolean }>`
   height: 40px;
   border-radius: 50%;
   background-color: ${(props) => props.$color};
-  border: 3px solid ${(props) => (props.$selected ? '#374151' : 'transparent')};
+  border: 3px solid ${(props) => (props.$selected ? 'var(--foreground)' : 'transparent')};
   cursor: pointer;
   transition: transform 0.2s ease, border-color 0.2s ease;
 
@@ -58,7 +58,7 @@ const ColorSwatch = styled.button<{ $color: string; $selected: boolean }>`
   }
 
   &:focus {
-    outline: 2px solid #5EC4CD;
+    outline: 2px solid #3b82f6;
     outline-offset: 2px;
   }
 
@@ -71,6 +71,6 @@ const ColorSwatch = styled.button<{ $color: string; $selected: boolean }>`
 const ColorHint = styled.p`
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  color: #9ca3af;
+  color: var(--text-muted);
   margin: 0;
 `;

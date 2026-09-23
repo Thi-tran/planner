@@ -248,7 +248,7 @@ const LoadingOverlay = styled.div`
 const Spinner = styled.div`
   width: 24px;
   height: 24px;
-  border: 3px solid #e2e8f0;
+  border: 3px solid var(--border);
   border-top-color: #3b82f6;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
@@ -261,11 +261,11 @@ const ErrorBanner = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #fef2f2;
-  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--danger-text);
   padding: 8px 16px;
   font-size: 14px;
-  border-bottom: 1px solid #fecaca;
+  border-bottom: 1px solid rgba(239, 68, 68, 0.35);
 `;
 
 const RetryButton = styled.button`
@@ -273,8 +273,8 @@ const RetryButton = styled.button`
   border: 1px solid #ef4444;
   border-radius: 4px;
   background: transparent;
-  color: #ef4444;
+  color: var(--danger-text);
   font-size: 13px;
   cursor: pointer;
-  &:hover { background: #fef2f2; }
+  &:hover { background: rgba(239, 68, 68, 0.12); }
 `;

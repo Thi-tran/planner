@@ -87,8 +87,8 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 1px solid #e2e8f0;
-  background: #fff;
+  border-bottom: 1px solid var(--sidebar-border);
+  background: var(--sidebar-bg);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -102,41 +102,41 @@ const LeftGroup = styled.div`
 
 const TodayButton = styled.button`
   padding: 6px 12px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-light);
   border-radius: 6px;
-  background: #fff;
+  background: var(--surface);
   font-size: 14px;
   cursor: pointer;
-  color: #374151;
+  color: var(--text-tertiary);
   &:hover {
-    background: #f8fafc;
+    background: var(--surface-alt);
   }
 `;
 
 const NavButton = styled.button`
   padding: 4px 10px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-light);
   border-radius: 6px;
-  background: #fff;
+  background: var(--surface);
   font-size: 20px;
   line-height: 1;
   cursor: pointer;
-  color: #374151;
+  color: var(--text-tertiary);
   &:hover {
-    background: #f8fafc;
+    background: var(--surface-alt);
   }
 `;
 
 const DateLabel = styled.span`
   font-size: 18px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--foreground);
   margin-left: 8px;
 `;
 
 const ViewSwitcher = styled.div`
   display: flex;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-light);
   border-radius: 6px;
   overflow: hidden;
 `;
@@ -144,28 +144,28 @@ const ViewSwitcher = styled.div`
 const ViewButton = styled.button<{ $active: boolean }>`
   padding: 6px 14px;
   border: none;
-  border-right: 1px solid #cbd5e1;
-  background: ${({ $active }) => ($active ? '#3b82f6' : '#fff')};
-  color: ${({ $active }) => ($active ? '#fff' : '#374151')};
+  border-right: 1px solid var(--border-light);
+  background: ${({ $active }) => ($active ? '#3b82f6' : 'var(--surface)')};
+  color: ${({ $active }) => ($active ? '#fff' : 'var(--text-tertiary)')};
   font-size: 14px;
   cursor: pointer;
   &:last-child {
     border-right: none;
   }
   &:hover {
-    background: ${({ $active }) => ($active ? '#2563eb' : '#f8fafc')};
+    background: ${({ $active }) => ($active ? '#2563eb' : 'var(--surface-alt)')};
   }
 `;
 
 const ManageButton = styled.button`
   padding: 6px 12px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-light);
   border-radius: 6px;
-  background: #fff;
+  background: var(--surface);
   font-size: 14px;
   cursor: pointer;
-  color: #374151;
+  color: var(--text-tertiary);
   &:hover {
-    background: #f8fafc;
+    background: var(--surface-alt);
   }
 `;
