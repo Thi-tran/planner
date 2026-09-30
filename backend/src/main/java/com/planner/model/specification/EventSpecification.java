@@ -1,8 +1,7 @@
-package com.planner.model;
+package com.planner.model.specification;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
+import com.planner.model.entity.EventEntity;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.Instant;

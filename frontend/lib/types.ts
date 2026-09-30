@@ -104,6 +104,7 @@ export interface ChecklistTask {
 export interface Checklist {
   id: string;
   projectId: string;
+  eventId: string | null;
   name: string;
   description: string;
   color: string;

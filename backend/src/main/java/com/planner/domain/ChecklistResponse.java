@@ -8,6 +8,7 @@ import java.util.UUID;
 public record ChecklistResponse(
         UUID id,
         UUID projectId,
+        UUID eventId,
         String name,
         String description,
         String color,

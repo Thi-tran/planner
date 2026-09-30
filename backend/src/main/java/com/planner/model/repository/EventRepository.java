@@ -1,8 +1,10 @@
-package com.planner.model;
+package com.planner.model.repository;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import com.planner.model.entity.EventEntity;
 
 import java.time.Instant;
 import java.util.List;
@@ -33,7 +35,7 @@ public interface EventRepository extends JpaRepository<EventEntity, UUID>, JpaSp
      * @param from the inclusive start time of the range
      * @return a list of events overlapping with [from, to)
      */
-    @EntityGraph(attributePaths = {"category"})
+    @EntityGraph(attributePaths = { "category", "checkLists" })
     List<EventEntity> findByStartTimeLessThanAndEndTimeGreaterThan(Instant to, Instant from);
 
     /**
@@ -42,7 +44,7 @@ public interface EventRepository extends JpaRepository<EventEntity, UUID>, JpaSp
      * @param id the UUID of the event
      * @return an Optional containing the event if found
      */
-    @EntityGraph(attributePaths = {"category"})
+    @EntityGraph(attributePaths = { "category", "checkLists" })
     Optional<EventEntity> findById(UUID id);
 
     /**
@@ -56,7 +58,7 @@ public interface EventRepository extends JpaRepository<EventEntity, UUID>, JpaSp
      * @param from the inclusive start time of the range
      * @return a list of events for the project overlapping with [from, to)
      */
-    @EntityGraph(attributePaths = {"category"})
+    @EntityGraph(attributePaths = { "category", "checkLists" })
     List<EventEntity> findByProjectIdAndStartTimeLessThanAndEndTimeGreaterThan(
             UUID projectId, Instant to, Instant from);
 }

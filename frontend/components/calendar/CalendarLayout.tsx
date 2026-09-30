@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect, startTransition } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 import { useSearchParams, useRouter } from 'next/navigation';
 import {
@@ -53,7 +53,6 @@ export default function CalendarLayout() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const projectId = searchParams.get('projectId');
-  const startDateParam = searchParams.get('startDate');
 
   // Redirect to projects if no projectId
   useEffect(() => {
@@ -63,32 +62,10 @@ export default function CalendarLayout() {
   }, [projectId, router]);
 
   const [currentView, setCurrentView] = useState<CalendarView>('week');
-  const [currentDate, setCurrentDate] = useState<Date>(() => {
-    // Initialize with project start date if provided, otherwise use today
-    if (startDateParam) {
-      try {
-        return new Date(startDateParam);
-      } catch {
-        return new Date();
-      }
-    }
-    return new Date();
-  });
+  const [currentDate, setCurrentDate] = useState<Date>(() => new Date());
   const [modalState, setModalState] = useState<ModalState>({ open: false });
   const [showManageCategories, setShowManageCategories] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-
-  // Focus on project start date when startDate param changes
-  useEffect(() => {
-    if (startDateParam) {
-      try {
-        const startDate = new Date(startDateParam);
-        startTransition(() => setCurrentDate(startDate));
-      } catch {
-        // Invalid date, ignore
-      }
-    }
-  }, [startDateParam]);
 
   const today = useMemo(() => new Date(), []);
   const range = useMemo(() => getRange(currentDate, currentView), [currentDate, currentView]);

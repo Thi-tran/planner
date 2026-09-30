@@ -25,7 +25,20 @@ public interface ChecklistRepository extends JpaRepository<ChecklistEntity, UUID
         ORDER BY c.createdAt
     """)
     List<ChecklistEntity> findByProjectIdWithTasks(@Param("projectId") UUID projectId);
-    
+
+    /**
+     * Fetch checklists linked to a specific event, with tasks.
+     * Uses JOIN FETCH to prevent N+1 queries.
+     */
+    @Query("""
+                SELECT DISTINCT c FROM ChecklistEntity c
+                LEFT JOIN FETCH c.tasks t
+                LEFT JOIN FETCH t.assignedToUser
+                WHERE c.event.id = :eventId
+                ORDER BY c.createdAt
+            """)
+    List<ChecklistEntity> findByEventIdWithTasks(@Param("eventId") UUID eventId);
+
     /**
      * Fetch single checklist with all details for detail view.
      * Uses JOIN FETCH to prevent N+1 queries for tasks, users, and comments.

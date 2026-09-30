@@ -2,7 +2,7 @@ package com.planner.mapper;
 
 import com.planner.domain.EventRequest;
 import com.planner.domain.EventResponse;
-import com.planner.model.EventEntity;
+import com.planner.model.entity.EventEntity;
 import org.springframework.stereotype.Component;
 
 /**
